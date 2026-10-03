@@ -1,0 +1,221 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Inter and Poppins are self-hosted by next/font in layout.tsx under those exact
+   family names, so no Google Fonts request is needed. The @import that used to
+   sit here was also inert (an @import after other rules is invalid CSS). */
+
+:root {
+    --background: #FFF8F3;
+    --foreground: #1a1a1a;
+
+    --scroll-track: #e5e7eb;
+    --scroll-thumb: #FF6B4A;
+
+    --primary: #FF6B4A;
+    --primary-light: #FFB399;
+    --primary-dark: #E65539;
+    --primary-foreground: #ffffff;
+
+    --secondary: #2C3E7D;
+    --secondary-light: #4A5E9D;
+    --secondary-dark: #1A2850;
+    --secondary-foreground: #ffffff;
+
+    --accent: #FFB399;
+    --accent-light: #FFD4C4;
+    --accent-dark: #FF9775;
+    --accent-foreground: #1a1a1a;
+
+    --muted: #f3f4f6;
+    --muted-foreground: #6b7280;
+
+    --card: #ffffff;
+    --card-foreground: #1a1a1a;
+
+    --cream: #FFF8F3;
+}
+
+.dark {
+    --background: #0f172a;
+    --foreground: #f8fafc;
+
+    --scroll-track: #111827;
+    --scroll-thumb: #FF6B4A;
+
+    --primary: #FF6B4A;
+    --primary-light: #FF8F75;
+    --primary-dark: #E65539;
+    --primary-foreground: #ffffff;
+
+    --secondary: #3B82F6;
+    --secondary-light: #60A5FA;
+    --secondary-dark: #2563EB;
+    --secondary-foreground: #ffffff;
+
+    --accent: #F472B6;
+    --accent-light: #FBCFE8;
+    --accent-dark: #DB2777;
+    --accent-foreground: #ffffff;
+
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
+
+    --card: #1e293b;
+    --card-foreground: #f8fafc;
+
+    --cream: #1e293b;
+    /* Fallback for existing cream config */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+html {
+    scroll-behavior: smooth;
+    /* Keep scrollbar space reserved to prevent flicker when theme switches */
+    scrollbar-gutter: stable both-edges;
+    color-scheme: light;
+    scroll-padding-top: 130px;
+    /* Ensures links don't hide behind Navbar */
+}
+
+@media (max-height: 650px) {
+    .scroll-indicator {
+        display: none !important;
+    }
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background);
+    color: var(--foreground);
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.dark body,
+.dark {
+    color-scheme: dark;
+}
+
+@layer utilities {
+    .glass {
+        @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm border border-white/20 dark:border-white/10 shadow-lg;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scroll-track);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scroll-thumb);
+    border-radius: 5px;
+    border: 2px solid var(--scroll-track);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Premium Scrollbar for specific sections */
+.premium-scrollbar::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+
+.premium-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 0 4px;
+}
+
+.premium-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.premium-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* Animations */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Section spacing */
+.section-padding {
+    @apply py-16 md:py-24 lg:py-32;
+}
+
+.container-custom {
+    @apply max-w-7xl mx-auto;
+}
+
+/* Button styles. White text on --primary (#FF6B4A) is 2.82:1 and on
+   --primary-dark 3.67:1, both under the 4.5:1 WCAG minimum. primary-solid
+   (#C2410C, tailwind.config.js) is 5.18:1. Used by every filled button with
+   white text (this class, the Stay, event-modal and map buttons, the active
+   schedule tab) so the brand orange stays everywhere else. */
+.btn-primary {
+    @apply bg-primary-solid hover:bg-primary-solid-dark text-primary-foreground font-semibold px-8 py-3 rounded-full transition-[background-color,transform,box-shadow] duration-300 transform hover:scale-105 hover:shadow-lg;
+}
+
+.btn-outline {
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold px-8 py-3 rounded-full transition-colors duration-300;
+}
+
+/* Gradient text */
+.gradient-text {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/*
+ * Respect the OS "reduce motion" accessibility setting. When a visitor has
+ * asked their system to minimise animation, we neutralise every CSS
+ * animation/transition and make anchor scrolling instant. framer-motion is
+ * handled separately via <MotionConfig reducedMotion="user"> in providers.tsx.
+ */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    html {
+        scroll-behavior: auto !important;
+    }
+}
