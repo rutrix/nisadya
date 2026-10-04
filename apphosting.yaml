@@ -1,0 +1,5 @@
+# Firebase App Hosting settings for the backend that builds this branch.
+# maxInstances caps the cost and the capacity: at most 10 Cloud Run instances.
+# Do not set NOINDEX here: this file reaches every backend. Only the staging backend has it, in its console settings.
+runConfig:
+  maxInstances: 10

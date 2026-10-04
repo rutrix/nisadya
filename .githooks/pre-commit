@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+// Blocks a commit that adds people's email addresses, phone numbers or names, or a published sheet ID,
+// to this public repo. Turn it on once in each clone: git config core.hooksPath .githooks
+// Git history is permanent. Patterns: src/lib/privacy.mjs. Names: .git/private-names.txt, which
+// scripts/bake.mjs writes from the sheet. To check the files that a commit would take, without staging:
+//   node .githooks/pre-commit --worktree
+const { execFileSync } = require('node:child_process');
+const { readFileSync } = require('node:fs');
+const path = require('node:path');
+
+(async () => {
+  const root = execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim();
+  const { findPrivate, PRIVACY_ALLOW } = await import(path.join(root, 'src/lib/privacy.mjs'));
+  const allow = [...PRIVACY_ALLOW, '46338953+rutrix@users.noreply.github.com'];
+  let names = [];
+  try {
+    names = readFileSync(path.join(root, '.git/private-names.txt'), 'utf8').split('\n').map((s) => s.trim()).filter(Boolean);
+  } catch {}
+  const worktree = process.argv.includes('--worktree');
+  const git = (args) => execFileSync('git', args, { cwd: root, encoding: 'utf8', maxBuffer: 1 << 30 });
+  const files = (worktree ? git(['ls-files', '-co', '--exclude-standard', '-z']) : git(['diff', '--cached', '--name-only', '--diff-filter=ACMR', '-z']))
+    .split('\0')
+    .filter(Boolean);
+  const SKIP = /\.(png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf|eot|pdf|zip)$/i;
+  // The baked sheet and its media are never committed, whatever they hold (.gitignore; `git add -f` gets here).
+  const NEVER = /^(src\/data\/baked\.json$|public\/media\/)/;
+  const hits = [];
+  for (const f of files) {
+    if (NEVER.test(f)) {
+      hits.push(`  ${f}: never commit this file. It is baked from the sheet for each build.`);
+      continue;
+    }
+    if (SKIP.test(f)) continue;
+    let buf;
+    try {
+      buf = worktree ? readFileSync(path.join(root, f)) : execFileSync('git', ['show', `:${f}`], { cwd: root, maxBuffer: 1 << 30 });
+    } catch {
+      continue; // deleted in the working tree
+    }
+    if (buf.includes(0)) continue; // binary
+    buf.toString('utf8').split('\n').forEach((line, i) => {
+      const kinds = findPrivate(line, names, allow);
+      if (kinds.length) hits.push(`  ${f}:${i + 1}: ${kinds.join(', ')}`);
+    });
+  }
+  if (hits.length) {
+    console.error(
+      `privacy check: ${hits.length} problem(s). The repo is public and git history is permanent.\n` +
+        `${hits.join('\n')}\nRemove the data. If a match is not personal, add it to PRIVACY_ALLOW in src/lib/privacy.mjs.`,
+    );
+    process.exit(1);
+  }
+  if (worktree) console.log(`privacy check: clean (${files.length} files, ${names.length} names)`);
+})().catch((e) => {
+  console.error(`privacy check could not run, so the commit is blocked: ${e.message}`);
+  process.exit(1);
+});

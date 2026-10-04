@@ -2,220 +2,147 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Inter and Poppins are self-hosted by next/font in layout.tsx under those exact
-   family names, so no Google Fonts request is needed. The @import that used to
-   sit here was also inert (an @import after other rules is invalid CSS). */
-
+/* Design tokens. The dark theme changes colours only. */
 :root {
-    --background: #FFF8F3;
-    --foreground: #1a1a1a;
+  --bg: #fff;
+  --surface-subtle: #eee;
+  --surface-faint: #f5f5f5;
+  --surface-dark: #444;
+  --fg: #000;
+  --fg-subtle: #444;
+  --fg-secondary: #666;
+  --fg-legal: #767676;
+  --fg-muted: #707070;
+  --fg-on-dark: #eee;
+  --border: #444;
+  --border-subtle: #ddd;
+  --border-on-dark: #444;
+  --brand: #000;
+  --brand-strong: #444;
+  --brand-fg: #fff;
+  --focus: #0b7aff;
+  --danger: #b3261e;
+  --overlay-sheet: #ffffffbf;
+  --font-display: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
 
-    --scroll-track: #e5e7eb;
-    --scroll-thumb: #FF6B4A;
+  /* Accent 1, the venue panel and the FAQ answer use the Nisadya green #B9DF2F.
+     Its tag colour is a darker shade of the same hue, and it also gives 4.5:1 on the tint. Accent 3 is the turquoise.
+     Accent 2 (blue), accent 4 and the venue background keep the values from the reference design (chosen on October 4, 2026).
+     Each tag colour is a darker shade that gives 4.5:1 contrast with white text. */
+  --venue-bg: #e6eef8;
+  --venue-panel: #b9df2f;
+  --faq-answer: #b9df2f;
+  --a1-base: #b9df2f; --a1-tint: #fbfdf3; --a1-tag: #657c02; --a1-text: #657c02;
+  --a2-base: #1d8eff; --a2-tint: #f2f9ff; --a2-tag: #0059b2; --a2-text: #0059b2;
+  --a3-base: #0cefd3; --a3-tint: #f2fffe; --a3-tag: #007a7a; --a3-text: #007a7a;
+  --a4-base: #e0e0e0; --a4-tint: #f2f2f2; --a4-tag: #666; --a4-text: #666;
 
-    --primary: #FF6B4A;
-    --primary-light: #FFB399;
-    --primary-dark: #E65539;
-    --primary-foreground: #ffffff;
+  /* Card colour slots. Cards use slot 1 to 4 in turn. The script in layout.tsx puts the four accents
+     in a random order, once per visit (sessionStorage). Without it, the slots keep this order. */
+  --slot1-base: var(--a1-base); --slot1-tint: var(--a1-tint); --slot1-tag: var(--a1-tag); --slot1-text: var(--a1-text);
+  --slot2-base: var(--a2-base); --slot2-tint: var(--a2-tint); --slot2-tag: var(--a2-tag); --slot2-text: var(--a2-text);
+  --slot3-base: var(--a3-base); --slot3-tint: var(--a3-tint); --slot3-tag: var(--a3-tag); --slot3-text: var(--a3-text);
+  --slot4-base: var(--a4-base); --slot4-tint: var(--a4-tint); --slot4-tag: var(--a4-tag); --slot4-text: var(--a4-text);
 
-    --secondary: #2C3E7D;
-    --secondary-light: #4A5E9D;
-    --secondary-dark: #1A2850;
-    --secondary-foreground: #ffffff;
-
-    --accent: #FFB399;
-    --accent-light: #FFD4C4;
-    --accent-dark: #FF9775;
-    --accent-foreground: #1a1a1a;
-
-    --muted: #f3f4f6;
-    --muted-foreground: #6b7280;
-
-    --card: #ffffff;
-    --card-foreground: #1a1a1a;
-
-    --cream: #FFF8F3;
+  --header-h: 77px;
+  color-scheme: light;
 }
 
-.dark {
-    --background: #0f172a;
-    --foreground: #f8fafc;
-
-    --scroll-track: #111827;
-    --scroll-thumb: #FF6B4A;
-
-    --primary: #FF6B4A;
-    --primary-light: #FF8F75;
-    --primary-dark: #E65539;
-    --primary-foreground: #ffffff;
-
-    --secondary: #3B82F6;
-    --secondary-light: #60A5FA;
-    --secondary-dark: #2563EB;
-    --secondary-foreground: #ffffff;
-
-    --accent: #F472B6;
-    --accent-light: #FBCFE8;
-    --accent-dark: #DB2777;
-    --accent-foreground: #ffffff;
-
-    --muted: #1e293b;
-    --muted-foreground: #94a3b8;
-
-    --card: #1e293b;
-    --card-foreground: #f8fafc;
-
-    --cream: #1e293b;
-    /* Fallback for existing cream config */
+[data-theme='dark'] {
+  --bg: #000;
+  --surface-subtle: #222;
+  --surface-faint: #1a1a1a;
+  --fg: #fff;
+  --fg-subtle: #bbb;
+  --fg-secondary: #aaa;
+  --fg-legal: #999;
+  --fg-muted: #999;
+  --border: #bbb;
+  --border-subtle: #333;
+  --brand: #fff;
+  --brand-strong: #ddd;
+  --brand-fg: #000;
+  --danger: #ff7b6e;
+  --overlay-sheet: #000000bf;
+  --a1-text: #b9df2f;
+  --a2-text: #1d8eff;
+  --a3-text: #0cefd3;
+  --a4-text: #e0e0e0;
+  /* The light venue section sits 6.22 CIELAB L* below the white page. Dark mirrors it: 6.22 L* above
+     the black page, same a* and b* (the blue tint). If the light value changes, mirror it again. */
+  --venue-bg: #0d151b;
+  color-scheme: dark;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    border-color: rgba(255, 255, 255, 0.1);
+@media (min-width: 1080px) {
+  :root { --header-h: 83px; }
 }
 
-html {
-    scroll-behavior: smooth;
-    /* Keep scrollbar space reserved to prevent flicker when theme switches */
-    scrollbar-gutter: stable both-edges;
-    color-scheme: light;
-    scroll-padding-top: 130px;
-    /* Ensures links don't hide behind Navbar */
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-bg text-fg font-sans;
+    font-size: 16px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+  /* Black text sits on a light surface, so a black ring has at least the text contrast there (cards, contact, FAQ answers). */
+  .text-black :focus-visible { outline-color: #000; }
+  #faq summary:focus-visible { outline-color: #fff; }
+  [data-theme-switching], [data-theme-switching] * {
+    transition: color 200ms cubic-bezier(.16,1,.3,1), background-color 200ms cubic-bezier(.16,1,.3,1),
+      border-color 200ms cubic-bezier(.16,1,.3,1), fill 200ms cubic-bezier(.16,1,.3,1) !important;
+  }
+  dialog { color: inherit; max-width: none; max-height: none; }
+  /* Any open dialog (menu, filters, event) locks the page behind it. No script has to undo the lock. */
+  html:has(dialog[open]) { overflow: hidden; }
+  dialog::backdrop { background: transparent; }
 }
 
-@media (max-height: 650px) {
-    .scroll-indicator {
-        display: none !important;
-    }
+@layer components {
+  .tabular { font-variant-numeric: tabular-nums; }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-brand font-bold text-brand-fg transition-colors duration-fast ease-out;
+  }
+  @media (hover: hover) { .btn-primary:hover { @apply bg-brand-strong; } }
+  .btn-label { @apply inline-flex cursor-default items-center justify-center bg-brand font-bold text-brand-fg opacity-60; }
+  /* The animation lives here, not in an inline style, so the pause rule below can win.
+     Hover pauses that row only. The pause box pauses both rows. Keyboard focus (not a mouse click) returns the row
+     to its start, so the browser can scroll the focused card into view. The row clips its content at rest, so no
+     scroll offset remains when the focus leaves. */
+  .marquee-track { animation: marquee-left var(--marquee-duration, 60s) linear infinite; }
+  .marquee-track[data-direction='reverse'] { animation-direction: reverse; }
+  .marquee-row:hover .marquee-track, section:has(.marquee-pause:checked) .marquee-track { animation-play-state: paused; }
+  .marquee-row:has(:focus-visible) { overflow: hidden; }
+  .marquee-row:has(:focus-visible) .marquee-track { animation: none; }
 }
 
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--background);
-    color: var(--foreground);
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
+@keyframes marquee-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-.dark body,
-.dark {
-    color-scheme: dark;
-}
-
-@layer utilities {
-    .glass {
-        @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm border border-white/20 dark:border-white/10 shadow-lg;
-    }
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--scroll-track);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--scroll-thumb);
-    border-radius: 5px;
-    border: 2px solid var(--scroll-track);
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background-color: var(--primary-dark);
-}
-
-/* Premium Scrollbar for specific sections */
-.premium-scrollbar::-webkit-scrollbar {
-    height: 6px;
-    width: 6px;
-}
-
-.premium-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-    margin: 0 4px;
-}
-
-.premium-scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.premium-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: var(--primary);
-}
-
-/* Animations */
-@keyframes float {
-
-    0%,
-    100% {
-        transform: translateY(0px);
-    }
-
-    50% {
-        transform: translateY(-20px);
-    }
-}
-
-.animate-float {
-    animation: float 3s ease-in-out infinite;
-}
-
-/* Section spacing */
-.section-padding {
-    @apply py-16 md:py-24 lg:py-32;
-}
-
-.container-custom {
-    @apply max-w-7xl mx-auto;
-}
-
-/* Button styles. White text on --primary (#FF6B4A) is 2.82:1 and on
-   --primary-dark 3.67:1, both under the 4.5:1 WCAG minimum. primary-solid
-   (#C2410C, tailwind.config.js) is 5.18:1. Used by every filled button with
-   white text (this class, the Stay, event-modal and map buttons, the active
-   schedule tab) so the brand orange stays everywhere else. */
-.btn-primary {
-    @apply bg-primary-solid hover:bg-primary-solid-dark text-primary-foreground font-semibold px-8 py-3 rounded-full transition-[background-color,transform,box-shadow] duration-300 transform hover:scale-105 hover:shadow-lg;
-}
-
-.btn-outline {
-    @apply border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold px-8 py-3 rounded-full transition-colors duration-300;
-}
-
-/* Gradient text */
-.gradient-text {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/*
- * Respect the OS "reduce motion" accessibility setting. When a visitor has
- * asked their system to minimise animation, we neutralise every CSS
- * animation/transition and make anchor scrolling instant. framer-motion is
- * handled separately via <MotionConfig reducedMotion="user"> in providers.tsx.
- */
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+  .marquee-track { animation: none !important; }
+  /* With reduced motion, the visitor can scroll the rows by hand. The second rule below hides the loop copies. */
+  .marquee-row, .marquee-row:has(:focus-visible) { overflow-x: auto; }
+  .marquee-track > ul > li[aria-hidden] { display: none; }
+}
 
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
+/* The hero image set for this visit: the script in layout.tsx sets data-hero (1 to 5) on <html>.
+   Without the script, set 1 shows. One rule per entry of HERO_SETS in components/home/Hero.tsx. */
+.hero-set { display: none; }
+:root:not([data-hero]) .hero-set[data-set='1'],
+[data-hero='1'] .hero-set[data-set='1'], [data-hero='2'] .hero-set[data-set='2'], [data-hero='3'] .hero-set[data-set='3'],
+[data-hero='4'] .hero-set[data-set='4'], [data-hero='5'] .hero-set[data-set='5'] { display: contents; }
 
-    html {
-        scroll-behavior: auto !important;
-    }
+/* A soft patch in the page colour behind the hero text. Every hero image sits on the page colour (white or
+   black). Thus the patch is invisible on empty background and shows only where objects pass behind the text.
+   A new hero image must keep a plain page-coloured background. */
+.halo { position: relative; isolation: isolate; }
+.halo::before {
+  content: ''; position: absolute; inset: -1.5rem -2rem; z-index: -1;
+  border-radius: 3rem; background: var(--bg); opacity: 0.85; filter: blur(24px);
 }

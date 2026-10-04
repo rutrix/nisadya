@@ -1,4 +1,4 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# See https://help.github.com/articles/ignoring-files/ for more information about the ignore rules.
 
 # dependencies
 /node_modules
@@ -37,10 +37,17 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.genkit/*
 .env*
+
+# Playwright test logs, anywhere in the tree
+.playwright-cli/
 
 # firebase
 firebase-debug.log
 firestore-debug.log
 tunnel.log
+
+# The baked sheet and its media hold people's names and phone numbers. scripts/bake.mjs makes them
+# for every build and dev start, so they never enter git (history is permanent).
+/src/data/baked.json
+/public/media/

@@ -1,13 +1,13 @@
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
+import { SITE_URL, getSite } from '@/lib/data';
 
-// The home page is the only route. Add more entries here if that changes.
-export default function sitemap(): MetadataRoute.Sitemap {
-    return [
-        {
-            url: 'https://nisadya.in',
-            lastModified: new Date(),
-            changeFrequency: 'daily',
-            priority: 1,
-        },
-    ];
+export const revalidate = 60;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const { events } = await getSite();
+  const now = new Date();
+  return ['', '/events', ...events.map((e) => `/events/${e.id}`), '/about', '/guide', '/policy', '/terms'].map((p) => ({
+    url: `${SITE_URL}${p}`,
+    lastModified: now,
+  }));
 }
