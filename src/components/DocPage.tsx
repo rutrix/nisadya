@@ -1,40 +1,27 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 import { RichText } from '@/components/RichText';
 import { getSite } from '@/lib/data';
 
-export const revalidate = 60;
-export const dynamicParams = false;
-
-/** The document pages. Their text comes from the pages tab of the sheet. */
-const PAGES: Record<string, { title: string; wide: boolean }> = {
+/** The document pages. Their text comes from the pages tab of the sheet. Each page has its own route
+ * (src/app/<name>/page.tsx), so an unknown path goes straight to the not-found page. */
+const PAGES = {
   about: { title: 'About', wide: false },
   guide: { title: 'Guide', wide: false },
   policy: { title: 'Privacy policy', wide: true },
   terms: { title: 'Terms of service', wide: true },
 };
+type Name = keyof typeof PAGES;
 
-type Props = { params: Promise<{ page: string }> };
-
-export function generateStaticParams() {
-  return Object.keys(PAGES).map((page) => ({ page }));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { page } = await params;
-  const meta = PAGES[page];
-  if (!meta) return {};
+export async function docMetadata(page: Name): Promise<Metadata> {
   const { pages } = await getSite();
   const lead = pages[page]?.lead[0]?.replace(/\s+/g, ' ').slice(0, 160);
-  return { title: meta.title, description: lead, alternates: { canonical: `/${page}` } };
+  return { title: PAGES[page].title, description: lead, alternates: { canonical: `/${page}` } };
 }
 
 const BODY = 'flex flex-col text-sm font-semibold leading-[21px] text-fg-subtle lg:text-lg lg:leading-[27px]';
 
-export default async function DocPage({ params }: Props) {
-  const { page } = await params;
+export async function DocPage({ page }: { page: Name }) {
   const meta = PAGES[page];
-  if (!meta) notFound();
   const { pages, contacts } = await getSite();
   const doc = pages[page] ?? { lead: [], sections: [] };
   const groups = page === 'guide' ? [...new Set(contacts.map((c) => c.group))] : [];
