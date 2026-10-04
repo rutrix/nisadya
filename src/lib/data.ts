@@ -83,8 +83,8 @@ export const image = (url: string) => {
   const src = url ? (bakedMedia[url] ?? driveImage(url)) : '';
   return canOptimise(src) ? src : '';
 };
-/** The link preview image: the share_image setting, else the fest logo in public/. */
-export const shareImage = (s: Settings) => image(s.share_image ?? '') || '/fest_main_logo.png';
+/** The link preview image: the share_image setting, else the 1200 x 630 card in public/. */
+export const shareImage = (s: Settings) => image(s.share_image ?? '') || '/share.png';
 /** "Nisadya 2026": the event name and the edition, each only if the sheet has it. */
 export const siteName = (s: Settings) => [s.event_name, s.edition].filter(Boolean).join(' ');
 
