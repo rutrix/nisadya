@@ -4,7 +4,13 @@ import { EventsView, EventsViewLive } from '@/components/events/EventsView';
 import { getSite } from '@/lib/data';
 
 export const revalidate = 60;
-export const metadata: Metadata = { title: 'Events', alternates: { canonical: '/events' } };
+// The description is the lead row (empty heading) of page "events" in the pages tab. Without it, the layout's applies.
+export async function generateMetadata(): Promise<Metadata> {
+  const { pages } = await getSite();
+  const description = pages.events?.lead[0]?.replace(/\s+/g, ' ').slice(0, 160);
+  // An undefined description would remove the layout's one, so the key is set only with a value.
+  return { title: 'Events', ...(description && { description }), alternates: { canonical: '/events' } };
+}
 
 export default async function EventsPage() {
   const { events, schedule } = await getSite();

@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const { events, settings: s } = await getSite();
   const e = events.find((x) => x.id === id);
-  if (!e) return {};
+  if (!e) return { title: 'Event not found' };
   const text = e.description.replace(/\s+/g, ' ').trim();
   const description = text ? (text.length > 120 ? `${text.slice(0, 117).trimEnd()}...` : text) : s.description;
   return {

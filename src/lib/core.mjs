@@ -123,6 +123,14 @@ export function isoDate(v) {
   return m ? `${m[3]}-${pad(m[2])}-${pad(m[1])}` : '';
 }
 
+/** A sheet date for schema.org: "2026-11-13", or "2026-11-13T10:00:00+05:30" when the cell has a time.
+ * @param {string} v @returns {string} */
+export function schemaDate(v) {
+  const date = isoDate(v);
+  const time = date && hhmm(String(v).trim().split(/[ T]/).slice(1).join(' '));
+  return time ? `${date}T${time}:00+05:30` : date;
+}
+
 /** Epoch ms of a date (and optional time) as India time. The server runs in UTC, so the
  * offset is always explicit. @param {string} v @param {string} [defaultTime] @returns {number | null} */
 export function istTime(v, defaultTime = '00:00') {

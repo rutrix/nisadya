@@ -15,7 +15,8 @@ type Name = keyof typeof PAGES;
 export async function docMetadata(page: Name): Promise<Metadata> {
   const { pages } = await getSite();
   const lead = pages[page]?.lead[0]?.replace(/\s+/g, ' ').slice(0, 160);
-  return { title: PAGES[page].title, description: lead, alternates: { canonical: `/${page}` } };
+  // An undefined description would remove the layout's one, so the key is set only with a value.
+  return { title: PAGES[page].title, ...(lead && { description: lead }), alternates: { canonical: `/${page}` } };
 }
 
 const BODY = 'flex flex-col text-sm font-semibold leading-[21px] text-fg-subtle lg:text-lg lg:leading-[27px]';

@@ -1,6 +1,6 @@
 // Self-check for src/lib/core.mjs, src/lib/privacy.mjs and src/data/venue-map.json. Run: npm run check
 import assert from 'node:assert/strict';
-import { canOptimise, directionsUrl, driveDownload, fitLine, isEmail, readTab, fitTitle, driveImage, hhmm, isFinal, isFixed, istTime, isoDate, parseCSV, parsePlaces, phaseAt, placeOnMap, resolveTab, slug, sniff, toRecords } from '../src/lib/core.mjs';
+import { canOptimise, directionsUrl, driveDownload, fitLine, isEmail, readTab, fitTitle, driveImage, hhmm, isFinal, isFixed, istTime, isoDate, parseCSV, schemaDate, parsePlaces, phaseAt, placeOnMap, resolveTab, slug, sniff, toRecords } from '../src/lib/core.mjs';
 import { findPrivate, sheetNames } from '../src/lib/privacy.mjs';
 import MAP from '../src/data/venue-map.json' with { type: 'json' };
 
@@ -56,6 +56,9 @@ assert.equal(hhmm('12:00 am'), '00:00');
 assert.equal(hhmm('25:00'), '');
 assert.equal(istTime('2026-11-13'), Date.parse('2026-11-12T18:30:00Z'));
 assert.equal(istTime('13/11/2026', '09:00'), Date.parse('2026-11-13T03:30:00Z'));
+assert.equal(schemaDate('2026-11-13'), '2026-11-13');
+assert.equal(schemaDate('2026-11-13 10:00'), '2026-11-13T10:00:00+05:30');
+assert.equal(schemaDate('TBD'), '');
 assert.equal(istTime('2026-11-13 10:15', '09:00'), Date.parse('2026-11-13T04:45:00Z'));
 assert.equal(istTime('2026-11-13 2:30 PM'), Date.parse('2026-11-13T09:00:00Z'));
 assert.equal(istTime(''), null);

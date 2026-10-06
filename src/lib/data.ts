@@ -85,6 +85,9 @@ export const image = (url: string) => {
 };
 /** The link preview image: the share_image setting, else the 1200 x 630 card in public/. */
 export const shareImage = (s: Settings) => image(s.share_image ?? '') || '/share.png';
+/** The venue address on one line: "line 1, line 2, ...". */
+export const venueAddress = (s: Settings) =>
+  (s.venue_address ?? '').split('\n').map((l) => l.trim().replace(/,$/, '')).filter(Boolean).join(', ');
 /** "Nisadya 2026": the event name and the edition, each only if the sheet has it. */
 export const siteName = (s: Settings) => [s.event_name, s.edition].filter(Boolean).join(' ');
 

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { isEmail } from '@/lib/core.mjs';
-import type { Settings } from '@/lib/data';
+import { venueAddress, type Settings } from '@/lib/data';
 
 const INTERNAL = [
   { href: '/about', label: 'About' },
@@ -21,7 +21,7 @@ export function Footer({ s }: { s: Settings }) {
       ['Unstop', s.registration_url],
     ] as const
   ).filter(([, url]) => /^https:\/\//i.test(url ?? ''));
-  const address = (s.venue_address ?? '').split('\n').map((l) => l.trim().replace(/,$/, '')).filter(Boolean).join(', ');
+  const address = venueAddress(s);
   const legal = [
     ['Organiser', s.organiser],
     ['Address', address],
