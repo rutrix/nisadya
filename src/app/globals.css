@@ -58,8 +58,8 @@
   --color-a4-text: var(--slot4-text);
 
   --font-*: initial;
-  --font-sans: 'Pretendard Variable', Pretendard, system-ui, -apple-system, sans-serif;
-  --font-display: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
+  --font-sans: var(--font-archivo), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-archivo), system-ui, sans-serif;
 
   --container-page: 1280px;
   --container-wide: 1492px;

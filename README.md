@@ -127,6 +127,6 @@ that file, because both backends read it.
 
 ## Credits
 
-Map data © OpenStreetMap contributors (ODbL). Fonts: Pretendard and Aoboshi
+Map data © OpenStreetMap contributors (ODbL). Fonts: Archivo and Aoboshi
 One, both under the SIL Open Font License 1.1 (licence files in the repo). The
 NIT Tiruchirappalli emblem belongs to the institute.

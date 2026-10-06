@@ -63,11 +63,10 @@ const nextConfig = {
         return [
             { source: '/:path*', headers: securityHeaders },
             // Files in public/ that the browser requests by name: the icons, the share image, the SVG
-            // logos, the venue maps and the Pretendard fonts. They get a one-day cache, not one year,
+            // logos and the venue maps. They get a one-day cache, not one year,
             // because their names are not content hashes. Next applies every entry that matches, so
             // /:path* still adds the security headers here.
             { source: '/:file(.*\\.png|.*\\.jpg|.*\\.svg)', headers: cacheOneDay },
-            { source: '/fonts/:path*', headers: cacheOneDay },
             // Baked media (scripts/bake.mjs) have content-hash names, so they get a one-year immutable
             // cache. This entry comes after the rules above, so its Cache-Control wins.
             { source: '/media/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] },

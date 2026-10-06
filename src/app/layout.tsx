@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import localFont from 'next/font/local';
 import './globals.css';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
@@ -8,6 +9,10 @@ import { Toaster } from '@/components/Toast';
 import { PHASE_KEYS, SITE_URL, getSite, shareImage, siteName } from '@/lib/data';
 
 export const revalidate = 60;
+
+// Archivo (SIL Open Font License 1.1, see fonts/Archivo-OFL.txt): the site font for text and the countdown. The file is
+// the variable font (weights 100 to 900) cut to English letters, digits and the punctuation the site shows.
+const archivo = localFont({ src: './fonts/Archivo-Subset.woff2', weight: '100 900', variable: '--font-archivo', display: 'swap' });
 
 export async function generateMetadata(): Promise<Metadata> {
   const { settings: s } = await getSite();
@@ -56,13 +61,10 @@ export default async function RootLayout({ children, modal }: { children: React.
   // data-scroll-behavior: globals.css scrolls smoothly for links inside a page. With this attribute, Next turns
   // that off during a page change, so a new page starts at the top at once.
   return (
-    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html lang="en" className={archivo.variable} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         {/* Before the first paint: pick the card colour order and the hero image set for this visit. */}
         <script dangerouslySetInnerHTML={{ __html: SHUFFLE }} />
-        {/* Pretendard, official dynamic subset (SIL OFL 1.1): the browser downloads only the subsets it needs. */}
-        {/* eslint-disable-next-line @next/next/no-css-tags */}
-        <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css" />
       </head>
       <body>
         <Providers>

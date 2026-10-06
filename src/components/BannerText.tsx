@@ -2,8 +2,9 @@ import localFont from 'next/font/local';
 import { fitLine, fitTitle } from '@/lib/core.mjs';
 import type { EventItem } from '@/lib/data';
 
-// Aoboshi One, Latin subset (SIL Open Font License 1.1, see src/app/fonts/AoboshiOne-OFL.txt).
-const aoboshi = localFont({ src: '../app/fonts/AoboshiOne-Latin.woff2', display: 'swap' });
+// Aoboshi One (SIL Open Font License 1.1, see src/app/fonts/AoboshiOne-OFL.txt), cut to English letters, digits and
+// the punctuation of the event names.
+const aoboshi = localFont({ src: '../app/fonts/AoboshiOne-Subset.woff2', display: 'swap' });
 
 // The body breaks words anywhere (overflow-wrap: anywhere). The banner lines must never break.
 const line = 'whitespace-nowrap uppercase wrap-normal';
