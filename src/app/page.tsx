@@ -30,7 +30,9 @@ function eventData(s: Settings, name: string) {
       name: s.venue_name || undefined,
       address: address ? { '@type': 'PostalAddress', streetAddress: address, addressCountry: 'IN' } : undefined,
     },
-    organizer: s.organiser ? { '@type': 'Organization', name: s.organiser } : undefined,
+    organizer: s.organiser
+      ? { '@type': 'Organization', name: s.organiser, url: /^https:\/\//i.test(s.organiser_url ?? '') ? s.organiser_url : undefined }
+      : undefined,
     image: [new URL(shareImage(s), SITE_URL).href],
     url: `${SITE_URL}/`,
   };
