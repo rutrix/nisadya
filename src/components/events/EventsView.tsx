@@ -234,7 +234,7 @@ function ListView({ events, total, hasSchedule, onReset }: { events: EventItem[]
                   <Chips e={e} />
                 </div>
                 <h3 className="order-1 text-lg font-bold leading-[27px] lg:order-2 lg:text-2xl lg:leading-9">
-                  <Link href={`/events/${e.id}`} className="after:absolute after:inset-0">
+                  <Link href={`/events/${e.id}`} scroll={false} className="after:absolute after:inset-0">
                     {e.name}
                   </Link>
                 </h3>

@@ -57,7 +57,7 @@ export function EventCard({ e, variant, duplicate = false, note, hard = false }:
             {e.name}
           </a>
         ) : (
-          <Link href={`/events/${e.id}`} tabIndex={duplicate ? -1 : undefined} className="after:absolute after:inset-0">
+          <Link href={`/events/${e.id}`} scroll={false} tabIndex={duplicate ? -1 : undefined} className="after:absolute after:inset-0">
             {variant === 'marquee' ? (
               <>
                 <span className="sr-only">{e.subtitle ? `${e.name}, ${e.subtitle}` : e.name}</span>

@@ -36,15 +36,22 @@ export function Hero({ s, name, serverNow, phase }: { s: Settings; name: string;
 
   return (
     // overflow-x-clip: the .halo patches reach a little past the text and must not widen a phone page.
-    <div className="relative isolate overflow-x-clip">
+    // From 768 px the box has the shape of the hero image, and both blocks sit inside it: title centre at 28% and
+    // countdown centre at 80% of the image height (the centres of the empty bands, averaged over the five image sets).
+    // Phones: the title centre sits at the middle of the visible screen (50svh). The empty band of the phone images
+    // runs from 37.5% to 50% of the image height (96.5vw to 128.7vw). --shift moves the image up only when the screen
+    // middle is above the band (short screens, mostly iPhones), so the title stays in the band. The countdown follows
+    // the image. This assumes that the hero is the first block of the page.
+    <div className="relative isolate overflow-x-clip [--shift:min(0px,calc(50svh_-_96.5vw))] md:aspect-[768/1560] lg:aspect-[1920/2310]">
       {/* The key visual behind the hero and the countdown. */}
-      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 aspect-[390/1004] overflow-hidden md:aspect-[768/1560] lg:aspect-[1920/2310]">
+      <div aria-hidden className="absolute inset-x-0 top-[var(--shift)] -z-10 aspect-[390/1004] overflow-hidden md:top-0 md:aspect-[768/1560] lg:aspect-[1920/2310]">
         {HERO_SETS.map((name, i) => (
           <HeroSet key={name} name={name} n={i + 1} />
         ))}
       </div>
-      <section aria-labelledby="hero-title" className="relative aspect-[390/1004] md:aspect-[768/944] lg:aspect-[1920/1400]">
-        <div className="absolute inset-x-0 top-[26.9%] flex justify-center px-4 text-center md:top-[22%]">
+      {/* Phones: the height of the image (257.44vw) less the part above the screen. */}
+      <section aria-labelledby="hero-title" className="relative h-[calc(257.44vw_+_var(--shift))] md:absolute md:inset-0 md:h-auto">
+        <div className="absolute inset-x-0 top-[50svh] flex -translate-y-1/2 justify-center px-4 text-center md:top-[28%]">
           <div className="halo flex flex-col items-center gap-3 md:gap-4 lg:gap-8">
             <h1 id="hero-title">
               <span className="sr-only">{name}</span>

@@ -43,16 +43,14 @@ export function Header(props: FrameProps) {
   const home = usePathname() === '/';
   const p = usePhase(props.phase, props.serverNow);
   const scrolled = useScrolledPast();
-  const [focusInside, setFocusInside] = useState(false);
   const menu = useRef<HTMLDialogElement>(null);
-  const shown = !home || scrolled || focusInside;
+  const shown = !home || scrolled;
 
   return (
     <>
       <header
-        className={`${home ? 'fixed inset-x-0' : 'sticky'} top-0 z-40 border-b border-line-subtle bg-bg transition-transform duration-base ${shown ? '' : '-translate-y-full'}`}
-        onFocus={() => setFocusInside(true)}
-        onBlur={(e) => !e.currentTarget.contains(e.relatedTarget as Node) && setFocusInside(false)}
+        // Keyboard focus inside the hidden header shows it. A mouse click on a link does not keep it shown.
+        className={`${home ? 'fixed inset-x-0' : 'sticky'} top-0 z-40 border-b border-line-subtle bg-bg transition-transform duration-base has-[:focus-visible]:translate-y-0 ${shown ? '' : '-translate-y-full'}`}
       >
         <div className="mx-auto flex max-w-wide items-center justify-between px-4 py-4 lg:px-10">
           <div className="flex items-center gap-10">

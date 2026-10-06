@@ -39,7 +39,8 @@ export function Countdown({ s, serverNow, name }: { s: PhaseSettings; serverNow:
   return (
     <section
       aria-labelledby="countdown-title"
-      className="flex flex-col items-center px-4 pb-[25.6vw] pt-[12.8vw] text-center md:pb-[18.5vw] md:pt-[37vw] lg:pb-[200px] lg:pt-[400px]"
+      // On phones the block follows the hero image. From 768 px it sits inside the image box of Hero.tsx.
+      className="flex flex-col items-center px-4 pb-[25.6vw] pt-[12.8vw] text-center md:absolute md:inset-x-0 md:top-[80%] md:-translate-y-1/2 md:py-0"
     >
       <div className="halo flex flex-col items-center gap-6 lg:gap-8">
         <h2 id="countdown-title" className="text-2xl font-bold leading-9 md:text-[40px] md:leading-[52px]">

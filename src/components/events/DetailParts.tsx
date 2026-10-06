@@ -50,7 +50,7 @@ export function EventDialog({ label, children }: { label: string; children: Reac
         router.back();
       }}
       onClick={(e) => (e.target === e.currentTarget || (e.target as HTMLElement).dataset.scrim) && router.back()}
-      className="fixed inset-0 z-50 m-0 h-full w-full overflow-y-auto bg-gradient-to-b from-[#333333b3] to-[#515151b3] p-0 backdrop:backdrop-blur-[25px]"
+      className="fixed inset-0 z-50 m-0 h-full w-full overflow-y-auto bg-transparent bg-gradient-to-b from-[#333333b3] to-[#515151b3] p-0 backdrop:backdrop-blur-[25px]"
     >
       <div data-scrim="1" className="flex min-h-full items-start justify-center lg:items-center lg:py-[63px]">
         {children}
