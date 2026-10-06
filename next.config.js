@@ -42,8 +42,7 @@ const nextConfig = {
     images: {
         // Firebase App Hosting disables the built-in Next image optimiser unless unoptimized is explicitly false.
         // https://firebase.google.com/docs/app-hosting/optimize-image-loading (read on 2026-09-02).
-        // The default minimumCacheTTL is 60 s. With that value, the optimiser downloads each Drive original
-        // again far too often for images that change once a year.
+        // The default minimumCacheTTL is 4 hours (Next.js 16). One day suits images that change once a year.
         unoptimized: false,
         minimumCacheTTL: 86400,
         // Anyone can call /_next/image, so these limits apply:
@@ -56,6 +55,9 @@ const nextConfig = {
     },
 
     reactStrictMode: true,
+
+    // next dev must not write files into the repo.
+    agentRules: false,
 
     async headers() {
         return [

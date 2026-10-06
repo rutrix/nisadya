@@ -57,10 +57,9 @@ export function Venue({ s }: { s: Settings }) {
           {/* The box keeps each file's aspect ratio, so a place is a plain percentage of it. From 1080px
               the box is 920px wide and the wrapper clips its left side when the row is narrower. */}
           <div className="relative order-first overflow-hidden bg-surface-faint lg:order-last lg:min-w-0 lg:flex-1">
-            <div className="relative aspect-[688/516] w-full lg:absolute lg:right-0 lg:top-0 lg:aspect-[992/494] lg:h-full lg:w-auto">
+            <div className="relative aspect-688/516 w-full lg:absolute lg:right-0 lg:top-0 lg:aspect-992/494 lg:h-full lg:w-auto">
               <picture>
                 <source media="(min-width: 1080px)" srcSet={MAP.desktop.src} />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={MAP.mobile.src} alt={s.venue_map_alt || `Map of ${s.venue_name}`} loading="lazy" className="absolute inset-0 h-full w-full" />
               </picture>
               {places.length > 0 && (
@@ -69,7 +68,7 @@ export function Venue({ s }: { s: Settings }) {
                     <li
                       key={`${p.lat},${p.lon}`}
                       style={{ '--mx': `${p.m?.x}%`, '--my': `${p.m?.y}%`, '--dx': `${p.d?.x}%`, '--dy': `${p.d?.y}%` } as CSSProperties}
-                      className={`absolute left-[var(--mx)] top-[var(--my)] lg:left-[var(--dx)] lg:top-[var(--dy)] ${p.m ? '' : 'hidden lg:block'} ${p.d ? '' : 'lg:hidden'}`}
+                      className={`absolute left-(--mx) top-(--my) lg:left-(--dx) lg:top-(--dy) ${p.m ? '' : 'hidden lg:block'} ${p.d ? '' : 'lg:hidden'}`}
                     >
                       <a
                         href={directionsUrl(p.lat, p.lon)}
@@ -84,7 +83,7 @@ export function Venue({ s }: { s: Settings }) {
                         )}
                         <span
                           className={`whitespace-nowrap px-2 py-1 text-sm font-bold leading-5 underline-offset-2 [@media(hover:hover)]:group-hover:underline ${
-                            p.venue ? 'bg-venue-panel text-black outline outline-2 -outline-offset-2 outline-black' : 'bg-black text-white'
+                            p.venue ? 'bg-venue-panel text-black outline-solid outline-2 -outline-offset-2 outline-black' : 'bg-black text-white'
                           }`}
                         >
                           <span className="sr-only">Directions to </span>

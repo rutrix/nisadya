@@ -42,21 +42,21 @@ export function Hero({ s, name, serverNow, phase }: { s: Settings; name: string;
     // runs from 37.5% to 50% of the image height (96.5vw to 128.7vw). --shift moves the image up only when the screen
     // middle is above the band (short screens, mostly iPhones), so the title stays in the band. The countdown follows
     // the image. This assumes that the hero is the first block of the page.
-    <div className="relative isolate overflow-x-clip [--shift:min(0px,calc(50svh_-_96.5vw))] md:aspect-[768/1560] lg:aspect-[1920/2310]">
+    <div className="relative isolate overflow-x-clip [--shift:min(0px,calc(50svh-96.5vw))] md:aspect-768/1560 lg:aspect-1920/2310">
       {/* The key visual behind the hero and the countdown. */}
-      <div aria-hidden className="absolute inset-x-0 top-[var(--shift)] -z-10 aspect-[390/1004] overflow-hidden md:top-0 md:aspect-[768/1560] lg:aspect-[1920/2310]">
+      <div aria-hidden className="absolute inset-x-0 top-(--shift) -z-10 aspect-390/1004 overflow-hidden md:top-0 md:aspect-768/1560 lg:aspect-1920/2310">
         {HERO_SETS.map((name, i) => (
           <HeroSet key={name} name={name} n={i + 1} />
         ))}
       </div>
       {/* Phones: the height of the image (257.44vw) less the part above the screen. */}
-      <section aria-labelledby="hero-title" className="relative h-[calc(257.44vw_+_var(--shift))] md:absolute md:inset-0 md:h-auto">
+      <section aria-labelledby="hero-title" className="relative h-[calc(257.44vw+var(--shift))] md:absolute md:inset-0 md:h-auto">
         <div className="absolute inset-x-0 top-[50svh] flex -translate-y-1/2 justify-center px-4 text-center md:top-[28%]">
           <div className="halo flex flex-col items-center gap-3 md:gap-4 lg:gap-8">
             <h1 id="hero-title">
               <span className="sr-only">{name}</span>
-              <span aria-hidden className="relative block aspect-[4/1] w-[260px] md:w-[332px] lg:w-[600px]">
-                <Image src="/nisadya-logo.svg" alt="" fill priority className="object-contain invert dark:invert-0" />
+              <span aria-hidden className="relative block aspect-4/1 w-[260px] md:w-[332px] lg:w-[600px]">
+                <Image src="/nisadya-logo.svg" alt="" fill loading="eager" fetchPriority="high" className="object-contain invert dark:invert-0" />
               </span>
             </h1>
             {s.tagline && <p className="text-xl font-bold leading-[30px] md:text-2xl md:leading-9 lg:text-[40px] lg:leading-[52px]">{s.tagline}</p>}

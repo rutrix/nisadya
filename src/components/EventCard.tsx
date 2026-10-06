@@ -39,7 +39,7 @@ const SIZES = {
   board: 'min-h-[200px] p-[15px] lg:h-[222px] xl:h-[220px]',
 };
 const TITLES = {
-  marquee: 'flex flex-1 flex-col justify-center [container-type:inline-size]', // name and subtitle centred, as on the event banner
+  marquee: 'flex flex-1 flex-col justify-center @container', // name and subtitle centred, as on the event banner
   board: 'text-lg font-bold leading-[27px] lg:line-clamp-3 lg:text-[15px] lg:leading-[22.5px]',
 };
 

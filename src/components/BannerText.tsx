@@ -6,7 +6,7 @@ import type { EventItem } from '@/lib/data';
 const aoboshi = localFont({ src: '../app/fonts/AoboshiOne-Latin.woff2', display: 'swap' });
 
 // The body breaks words anywhere (overflow-wrap: anywhere). The banner lines must never break.
-const line = 'whitespace-nowrap uppercase [overflow-wrap:normal]';
+const line = 'whitespace-nowrap uppercase wrap-normal';
 
 /** An event's name and subtitle in Aoboshi One, centred. Visual only: the caller gives the accessible name.
  * Sizes are in cqw, so the nearest ancestor with container-type: inline-size sets the scale. */

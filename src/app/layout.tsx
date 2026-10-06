@@ -53,8 +53,10 @@ export default async function RootLayout({ children, modal }: { children: React.
     phase: Object.fromEntries(PHASE_KEYS.map((k) => [k, s[k] ?? ''])),
     serverNow: Date.now(),
   };
+  // data-scroll-behavior: globals.css scrolls smoothly for links inside a page. With this attribute, Next turns
+  // that off during a page change, so a new page starts at the top at once.
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         {/* Before the first paint: pick the card colour order and the hero image set for this visit. */}
         <script dangerouslySetInnerHTML={{ __html: SHUFFLE }} />
@@ -66,13 +68,13 @@ export default async function RootLayout({ children, modal }: { children: React.
         <Providers>
           <a
             href="#main"
-            className="fixed left-1 top-1 z-[100] -translate-y-20 rounded-lg bg-brand px-4 py-2 text-brand-fg transition-transform duration-fast ease-out focus:translate-y-0"
+            className="fixed left-1 top-1 z-100 -translate-y-20 rounded-lg bg-brand px-4 py-2 text-brand-fg transition-transform duration-fast ease-out focus:translate-y-0"
           >
             Skip to content
           </a>
           <div className="flex min-h-svh flex-col">
             <Header {...frame} />
-            <main id="main" tabIndex={-1} className="flex flex-1 flex-col outline-none">
+            <main id="main" tabIndex={-1} className="flex flex-1 flex-col outline-hidden">
               {children}
             </main>
           </div>

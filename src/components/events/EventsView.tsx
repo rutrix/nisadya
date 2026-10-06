@@ -135,7 +135,7 @@ function Board({ events, schedule, listHref }: Props & { listHref: string }) {
           </h2>
           <div className="hidden border-b border-line-subtle xl:flex" aria-hidden>
             <span className="w-[70px] shrink-0" />
-            <div className="grid flex-1 gap-[5px] [grid-template-columns:repeat(var(--cols),minmax(0,1fr))]" style={cols}>
+            <div className="grid flex-1 gap-[5px] grid-cols-[repeat(var(--cols),minmax(0,1fr))]" style={cols}>
               {venues.map((v) => (
                 <span key={v} className="truncate py-2 text-sm font-semibold text-fg-muted">
                   {v || 'Venue to be announced'}
@@ -149,7 +149,7 @@ function Board({ events, schedule, listHref }: Props & { listHref: string }) {
             const plain = blocks.every((b) => !byId.has(b.eventId));
             return (
               <div key={key} className="xl:flex xl:border-b xl:border-line-subtle">
-                <div className="sticky top-[var(--header-h)] z-10 flex h-[42px] items-center justify-center bg-surface-subtle text-[15px] font-semibold md:h-14 xl:static xl:h-auto xl:w-[70px] xl:shrink-0 xl:bg-transparent">
+                <div className="sticky top-(--header-h) z-10 flex h-[42px] items-center justify-center bg-surface-subtle text-[15px] font-semibold md:h-14 xl:static xl:h-auto xl:w-[70px] xl:shrink-0 xl:bg-transparent">
                   {time}
                 </div>
                 {plain ? (
@@ -158,17 +158,17 @@ function Board({ events, schedule, listHref }: Props & { listHref: string }) {
                   </div>
                 ) : (
                   <ul
-                    className="grid gap-2.5 px-0 py-2.5 md:py-[15px] lg:grid-cols-4 lg:gap-[5px] lg:py-10 xl:flex-1 xl:py-[5px] xl:[grid-template-columns:repeat(var(--cols),minmax(0,1fr))]"
+                    className="grid gap-2.5 px-0 py-2.5 md:py-[15px] lg:grid-cols-4 lg:gap-[5px] lg:py-10 xl:flex-1 xl:py-[5px] xl:grid-cols-[repeat(var(--cols),minmax(0,1fr))]"
                     style={cols}
                   >
                     {venues.map((v, col) => {
                       const here = blocks.filter((b) => b.venue === v);
                       const at = { '--col': col + 1 } as React.CSSProperties;
-                      if (here.length === 0) return <li key={v} aria-hidden className="hidden bg-surface-subtle xl:block xl:[grid-column-start:var(--col)]" style={at} />;
+                      if (here.length === 0) return <li key={v} aria-hidden className="hidden bg-surface-subtle xl:block xl:col-start-(--col)" style={at} />;
                       return here.map((b, i) => {
                         const e = byId.get(b.eventId);
                         return (
-                          <li key={`${v}-${i}`} className="xl:[grid-column-start:var(--col)]" style={at}>
+                          <li key={`${v}-${i}`} className="xl:col-start-(--col)" style={at}>
                             {e ? (
                               <EventCard e={e} variant="board" note={b.venue} />
                             ) : (
@@ -223,7 +223,7 @@ function ListView({ events, total, hasSchedule, onReset }: { events: EventItem[]
         <section key={label || 'all'} aria-label={label || 'All events'} className="lg:flex lg:gap-[60px] lg:border-b lg:border-line-subtle lg:py-8">
           {!label && <h2 className="sr-only">All events</h2>}
           {label && (
-            <h2 className="sticky top-[var(--header-h)] z-10 flex h-[42px] items-center justify-center bg-surface-subtle text-[15px] font-semibold lg:static lg:block lg:h-auto lg:w-[160px] lg:shrink-0 lg:bg-transparent lg:text-2xl">
+            <h2 className="sticky top-(--header-h) z-10 flex h-[42px] items-center justify-center bg-surface-subtle text-[15px] font-semibold lg:static lg:block lg:h-auto lg:w-[160px] lg:shrink-0 lg:bg-transparent lg:text-2xl">
               {label}
             </h2>
           )}
@@ -257,7 +257,7 @@ function Box({ checked, small }: { checked: boolean; small?: boolean }) {
   return (
     <span
       aria-hidden
-      className={`grid shrink-0 place-items-center border-2 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus ${small ? 'h-4 w-4' : 'h-5 w-5'} ${checked ? 'border-fg bg-fg text-bg' : 'border-fg-secondary'}`}
+      className={`grid shrink-0 place-items-center border-2 peer-focus-visible:outline-solid peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus ${small ? 'h-4 w-4' : 'h-5 w-5'} ${checked ? 'border-fg bg-fg text-bg' : 'border-fg-secondary'}`}
     >
       {checked && <Check size={small ? 12 : 14} strokeWidth={3} />}
     </span>

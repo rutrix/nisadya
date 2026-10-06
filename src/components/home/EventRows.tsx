@@ -33,7 +33,7 @@ function Row({ events, dir }: { events: EventItem[]; dir: 'left' | 'right' }) {
 
 // The round control, styled like the theme button. The focus ring shows on the circle, because the checkbox is hidden.
 const CIRCLE =
-  'grid h-10 w-10 place-items-center rounded-full bg-brand text-brand-fg ring-2 ring-brand-fg peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus lg:h-[50px] lg:w-[50px]';
+  'grid h-10 w-10 place-items-center rounded-full bg-brand text-brand-fg ring-2 ring-brand-fg peer-focus-visible:outline-solid peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus lg:h-[50px] lg:w-[50px]';
 
 export function EventRows({ events }: { events: EventItem[] }) {
   if (events.length === 0) return null;

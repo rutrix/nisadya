@@ -80,7 +80,7 @@ export function CountdownPill({ p, className = '' }: { p: PhaseInfo; className?:
   const { d, h, m, s } = parts((p.target ?? p.now) - p.now);
   return (
     <div
-      className={`flex h-[50px] items-center justify-center gap-2 bg-white/20 shadow-inset-soft backdrop-blur-[8px] ${className}`}
+      className={`flex h-[50px] items-center justify-center gap-2 bg-white/20 shadow-inset-soft backdrop-blur-sm ${className}`}
     >
       <span className="font-semibold">{pillPrefix(p)}</span>
       {!live && p.target !== null && (

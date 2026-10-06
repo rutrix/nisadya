@@ -1,6 +1,6 @@
 'use client';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
 // Filled moon and sun, drawn for Nisadya on a 24-unit grid. The moon is a disc (r 8) minus a disc (r 7).
 const ICON = 'h-[22px] w-[22px] lg:h-7 lg:w-7';
@@ -21,11 +21,13 @@ const Sun = () => (
   </svg>
 );
 
+const subscribe = () => () => {};
+
 /** The round theme button. The caller sets the size and position. */
 export function ThemeToggle({ className = '' }: { className?: string }) {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  // False on the server and during hydration, true after it: the theme is known only in the browser.
+  const mounted = useSyncExternalStore(subscribe, () => true, () => false);
   const dark = mounted && resolvedTheme === 'dark';
   const toggle = () => {
     const root = document.documentElement;

@@ -6,7 +6,7 @@ import { toast } from './Toast';
 const STYLES = {
   home: {
     list: 'flex max-w-[164px] flex-wrap justify-center gap-2.5 md:max-w-none',
-    button: 'grid h-12 w-12 place-items-center bg-share text-white backdrop-blur-[8px] transition-colors duration-fast ease-out md:h-20 md:w-20 md:backdrop-blur-[12px] [@media(hover:hover)]:hover:bg-share-hover',
+    button: 'grid h-12 w-12 place-items-center bg-share text-white backdrop-blur-sm transition-colors duration-fast ease-out md:h-20 md:w-20 md:backdrop-blur-md [@media(hover:hover)]:hover:bg-share-hover',
     icon: 'h-[25px] w-[25px] md:h-[42px] md:w-[42px]',
   },
   detail: {

@@ -31,7 +31,7 @@ export default async function EventPage({ params }: Props) {
   const e = site.events.find((x) => x.id === id);
   if (!e) notFound();
   return (
-    <div className="flex flex-1 justify-center bg-gradient-to-b from-[#333333b3] to-[#515151b3] lg:py-[63px]">
+    <div className="flex flex-1 justify-center bg-linear-to-b from-[#333333b3] to-[#515151b3] lg:py-[63px]">
       <EventDetail e={e} site={site} mode="page" serverNow={Date.now()} />
     </div>
   );

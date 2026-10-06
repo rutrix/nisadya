@@ -20,9 +20,9 @@ export function Logo({ name }: { name: string }) {
   return (
     <div className="flex shrink-0 items-center gap-3">
       <Link href="/" className="shrink-0">
-        <Image src="/nisadya-logo.svg" alt={name} width={3955} height={975} priority className="h-5 w-auto invert dark:invert-0 lg:h-6" />
+        <Image src="/nisadya-logo.svg" alt={name} width={3955} height={975} loading="eager" fetchPriority="high" className="h-5 w-auto invert dark:invert-0 lg:h-6" />
       </Link>
-      <Image src="/nitt-logo.webp" alt="NIT Tiruchirappalli" width={40} height={40} priority className="h-9 w-9 lg:h-10 lg:w-10" />
+      <Image src="/nitt-logo.webp" alt="NIT Tiruchirappalli" width={40} height={40} loading="eager" className="h-9 w-9 lg:h-10 lg:w-10" />
     </div>
   );
 }
@@ -50,7 +50,7 @@ export function Header(props: FrameProps) {
     <>
       <header
         // Keyboard focus inside the hidden header shows it. A mouse click on a link does not keep it shown.
-        className={`${home ? 'fixed inset-x-0' : 'sticky'} top-0 z-40 border-b border-line-subtle bg-bg transition-transform duration-base has-[:focus-visible]:translate-y-0 ${shown ? '' : '-translate-y-full'}`}
+        className={`${home ? 'fixed inset-x-0' : 'sticky'} top-0 z-40 border-b border-line-subtle bg-bg transition-transform duration-base has-focus-visible:translate-y-0 ${shown ? '' : '-translate-y-full'}`}
       >
         <div className="mx-auto flex max-w-wide items-center justify-between px-4 py-4 lg:px-10">
           <div className="flex items-center gap-10">
@@ -100,7 +100,7 @@ function MobileMenu({ ref, p, ...props }: FrameProps & { ref: React.RefObject<HT
     <dialog
       ref={ref}
       aria-label="Menu"
-      className="fixed inset-0 m-0 h-full w-full bg-[var(--overlay-sheet)] p-0 backdrop:backdrop-blur-[12px] lg:hidden"
+      className="fixed inset-0 m-0 h-full w-full bg-(--overlay-sheet) p-0 backdrop:backdrop-blur-[12px] lg:hidden"
       onClick={(e) => e.target === e.currentTarget && close()}
     >
       <div className="bg-bg">

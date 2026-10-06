@@ -10,32 +10,32 @@
         "prebuild": "node --env-file-if-exists=.env.local scripts/bake.mjs",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint",
+        "lint": "eslint .",
         "bake": "node --env-file-if-exists=.env.local scripts/bake.mjs",
         "check": "node scripts/check.mjs",
         "predev": "node --env-file-if-exists=.env.local scripts/bake.mjs"
     },
     "dependencies": {
-        "lucide-react": "^0.563.0",
-        "next": "^15.5.27",
+        "lucide-react": "^1.52.0",
+        "next": "^16.3.8",
         "next-themes": "^0.4.6",
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0",
+        "react": "^19.3.0",
+        "react-dom": "^19.3.0",
         "sharp": "^0.35.5"
     },
     "devDependencies": {
-        "@types/node": "^20",
-        "@types/react": "^19",
-        "@types/react-dom": "^19",
-        "autoprefixer": "^10.4.23",
-        "eslint": "^8",
-        "eslint-config-next": "^15.5.27",
-        "postcss": "^8.5.26",
-        "tailwindcss": "^3.4.1",
-        "typescript": "^5"
+        "@tailwindcss/postcss": "^4.3.3",
+        "@types/node": "^24.19.1",
+        "@types/react": "^19.3.0",
+        "@types/react-dom": "^19.3.0",
+        "eslint": "^9.39.5",
+        "eslint-config-next": "^16.3.8",
+        "postcss": "^8.5.29",
+        "tailwindcss": "^4.3.3",
+        "typescript": "^6.0.3"
     },
     "overrides": {
         "sharp": "$sharp",
-        "postcss": "^8.5.26"
+        "postcss": "$postcss"
     }
 }

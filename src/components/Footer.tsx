@@ -8,7 +8,7 @@ const INTERNAL = [
   { href: '/policy', label: 'Privacy policy' },
   { href: '/terms', label: 'Terms' },
 ];
-const item = 'md:[&:not(:first-child)]:border-l-2 md:[&:not(:first-child)]:border-line-subtle md:[&:not(:first-child)]:pl-3';
+const item = 'md:not-first:border-l-2 md:not-first:border-line-subtle md:not-first:pl-3';
 const link = 'underline-offset-4 [@media(hover:hover)]:hover:underline';
 
 export function Footer({ s }: { s: Settings }) {

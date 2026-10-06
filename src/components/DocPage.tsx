@@ -41,7 +41,7 @@ export async function DocPage({ page }: { page: Name }) {
       <div className="mt-[50px] flex flex-col gap-10 lg:mt-10">
         {doc.sections.map((sec) => (
           <section key={sec.heading}>
-            <h2 className="text-base font-bold leading-none lg:text-2xl">{sec.heading}</h2>
+            <h2 className="text-base font-bold leading-none lg:text-2xl lg:leading-8">{sec.heading}</h2>
             <div className={`mt-3 gap-3 ${BODY}`}>
               {sec.paragraphs.map((p, i) => (
                 <RichText key={i} text={p} className="flex flex-col gap-1" />
@@ -51,7 +51,7 @@ export async function DocPage({ page }: { page: Name }) {
         ))}
         {groups.map((g) => (
           <section key={g}>
-            <h2 className="text-base font-bold leading-none lg:text-2xl">{g}</h2>
+            <h2 className="text-base font-bold leading-none lg:text-2xl lg:leading-8">{g}</h2>
             <ul className={`mt-3 gap-1 ${BODY}`}>
               {contacts
                 .filter((c) => c.group === g)

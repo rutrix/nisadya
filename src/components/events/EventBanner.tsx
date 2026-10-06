@@ -9,7 +9,7 @@ export function EventBanner({ e }: { e: EventItem }) {
     <div
       role="img"
       aria-label={label}
-      className={`flex aspect-[9/5] flex-col items-center justify-center overflow-hidden text-black [container-type:inline-size] ${accentOf(e).base}`}
+      className={`flex aspect-9/5 flex-col items-center justify-center overflow-hidden text-black @container ${accentOf(e).base}`}
     >
       <BannerText e={e} />
     </div>
