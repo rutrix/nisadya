@@ -68,7 +68,7 @@ export function RegisterAction({ p, url, className }: { p: PhaseInfo; url: strin
   }
   return (
     <span className={`btn-label ${className}`}>
-      Closed<span className="sr-only">: registration is over</span>
+      Registrations closed
     </span>
   );
 }

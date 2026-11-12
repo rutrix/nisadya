@@ -71,6 +71,13 @@ export function Hero({ s, name, serverNow, phase }: { s: Settings; name: string;
               )}
             </p>
             <HeroAction s={phase} serverNow={serverNow} url={s.registration_url} />
+            <div className="flex flex-col items-center gap-2 pt-2 lg:pt-0">
+              <p className="text-xs font-semibold md:text-sm lg:text-base">Title sponsor</p>
+              {/* The sponsor's artwork as supplied: a white panel keeps its colours readable in dark mode. */}
+              <span className="block bg-white p-3 lg:p-4">
+                <Image src="/sbi-logo.svg" alt="State Bank of India" width={442} height={216} className="h-auto w-[150px] md:w-[180px] lg:w-[240px]" />
+              </span>
+            </div>
           </div>
         </div>
       </section>
