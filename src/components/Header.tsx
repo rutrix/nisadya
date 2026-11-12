@@ -15,14 +15,19 @@ export const NAV = [
 
 export type FrameProps = { name: string; regUrl: string; phase: PhaseSettings; serverNow: number };
 
-/** The fest logo (an SVG) and the NITT emblem (a WebP), both in public/. The fest logo links home. */
+/** The fest logo (an SVG), the NITT emblem (a WebP) and the title sponsor's logo, all in public/. The fest logo links home. */
 export function Logo({ name }: { name: string }) {
   return (
-    <div className="flex shrink-0 items-center gap-3">
+    // Below 360 px (a 1280 px screen at 400% zoom gives 320), the tighter row keeps clear of the menu button.
+    <div className="flex shrink-0 items-center gap-3 max-[359px]:gap-2">
       <Link href="/" className="shrink-0">
         <Image src="/nisadya-logo.svg" alt={name} width={3955} height={975} loading="eager" fetchPriority="high" className="h-5 w-auto invert dark:invert-0 lg:h-6" />
       </Link>
       <Image src="/nitt-logo.webp" alt="NIT Tiruchirappalli" width={40} height={40} loading="eager" className="h-9 w-9 lg:h-10 lg:w-10" />
+      {/* As supplied, on white so it reads in dark mode. The padding is optical: the tagline baseline is the bottom edge. */}
+      <span className="block h-9 shrink-0 max-[359px]:h-8 bg-white px-[3.5px] pb-[2.6px] pt-[3.3px] lg:h-10">
+        <Image src="/sbi-logo.svg" alt="State Bank of India" width={442} height={216} loading="eager" className="h-full w-auto" />
+      </span>
     </div>
   );
 }
@@ -53,9 +58,10 @@ export function Header(props: FrameProps) {
         className={`${home ? 'fixed inset-x-0' : 'sticky'} top-0 z-40 border-b border-line-subtle bg-bg transition-transform duration-base has-focus-visible:translate-y-0 ${shown ? '' : '-translate-y-full'}`}
       >
         <div className="mx-auto flex max-w-wide items-center justify-between px-4 py-4 lg:px-10">
-          <div className="flex items-center gap-10">
+          {/* Below 1120 px, the full gaps leave no room between FAQ and the countdown pill. */}
+          <div className="flex items-center gap-6 min-[1120px]:gap-10">
             <Logo name={props.name} />
-            <nav aria-label="Main" className="hidden gap-8 text-lg font-bold lg:flex">
+            <nav aria-label="Main" className="hidden gap-6 text-lg font-bold lg:flex min-[1120px]:gap-8">
               {NAV.map((n) => (
                 <Link key={n.href} href={n.href}>
                   {n.label}
