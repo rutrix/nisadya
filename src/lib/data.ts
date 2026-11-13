@@ -1,5 +1,6 @@
 // Site data: the live Google Sheet, the last good read of each tab in this server process, and the baked copy
 // (src/data/baked.json). scripts/bake.mjs makes the baked copy for each build. Only the server uses this file.
+import 'server-only';
 import { cache } from 'react';
 import baked from '@/data/baked.json';
 import sheet from '../../sheet.json';
@@ -29,6 +30,8 @@ export type EventItem = {
   unstopUrl: string;
   coordinators: string[];
   contact: string;
+  /** True when the category is "Cancelled": the event keeps its page and shows no time. */
+  cancelled: boolean;
   blocks: Block[];
 };
 export type Faq = { category: string; question: string; answer: string };
@@ -121,7 +124,7 @@ export const getSite = cache(async (): Promise<Site> => {
       title: r.title ?? '',
     }))
     .filter((b) => b.date && b.start && (b.eventId || b.title))
-    .sort((a, b) => (a.date + a.start + a.venue).localeCompare(b.date + b.start + b.venue));
+    .sort((a, b) => (a.date + a.start + a.end + a.venue).localeCompare(b.date + b.start + b.end + b.venue));
 
   const seen = new Set<string>();
   const events: EventItem[] = [];
@@ -142,6 +145,7 @@ export const getSite = cache(async (): Promise<Site> => {
       unstopUrl: /^https:\/\//i.test(r.unstop_url ?? '') ? r.unstop_url : '',
       coordinators: list(r.coordinators),
       contact: r.contact ?? '',
+      cancelled: /^cancell?ed$/i.test(r.category ?? ''),
       blocks: schedule.filter((b) => b.eventId === id),
     });
   }

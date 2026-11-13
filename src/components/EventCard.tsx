@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { EventItem } from '@/lib/data';
-import { shortDay } from '@/lib/format';
+import { slotText } from '@/lib/format';
 import { BannerText } from './BannerText';
 
 /** Complete class names, so Tailwind keeps them. The colours are in globals.css. */
@@ -28,15 +28,12 @@ export function Chips({ e, home = false }: { e: EventItem; home?: boolean }) {
   );
 }
 
-/** First schedule block of an event, e.g. "Fri, 13 Nov · 10:00 · Seminar Hall". */
-export const firstSlot = (e: EventItem) => {
-  const b = e.blocks[0];
-  return b ? [shortDay(b.date), b.start, b.venue].filter(Boolean).join(' · ') : '';
-};
+/** First schedule block of an event, e.g. "Fri, 13 Nov · 10:00 · Seminar Hall". The start time only, so the room fits a phone. */
+export const firstSlot = (e: EventItem) => (e.blocks[0] ? slotText({ ...e.blocks[0], end: '' }) : '');
 
 const SIZES = {
   marquee: 'h-[240px] w-[300px] p-5 md:h-[280px] md:w-[420px] [@media(hover:hover)]:hover:opacity-90 transition-opacity duration-fast ease-out',
-  board: 'min-h-[200px] p-[15px] lg:h-[222px] xl:h-[220px]',
+  board: 'min-h-[200px] p-[15px] lg:min-h-[222px] xl:min-h-[220px]',
 };
 const TITLES = {
   marquee: 'flex flex-1 flex-col justify-center @container', // name and subtitle centred, as on the event banner
@@ -69,7 +66,7 @@ export function EventCard({ e, variant, duplicate = false, note, hard = false }:
           </Link>
         )}
       </h3>
-      {slot && <p className="mt-auto truncate text-[13px] font-bold">{slot}</p>}
+      {slot && <p className={`mt-auto text-[13px] font-bold ${variant === 'board' ? '' : 'truncate'}`}>{slot}</p>}
     </article>
   );
 }

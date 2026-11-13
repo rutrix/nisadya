@@ -8,7 +8,7 @@ function Row({ events, dir }: { events: EventItem[]; dir: 'left' | 'right' }) {
   while (cards.length < 6) cards = cards.concat(events); // one copy must be wider than the widest screen
   const seconds = cards.length * 3.3; // the reference speed: about 3.3 s per card
   return (
-    <div className="marquee-row overflow-hidden overflow-clip py-1">
+    <div className="marquee-row py-1">
       <div
         className="marquee-track flex w-max"
         data-direction={dir === 'right' ? 'reverse' : undefined}

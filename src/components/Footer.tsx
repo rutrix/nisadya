@@ -6,7 +6,7 @@ const INTERNAL = [
   { href: '/about', label: 'About' },
   { href: '/guide', label: 'Guide' },
   { href: '/policy', label: 'Privacy policy' },
-  { href: '/terms', label: 'Terms' },
+  { href: '/terms', label: 'Terms of service' },
 ];
 const item = 'md:not-first:border-l-2 md:not-first:border-line-subtle md:not-first:pl-3';
 const link = 'underline-offset-4 [@media(hover:hover)]:hover:underline';

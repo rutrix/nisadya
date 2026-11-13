@@ -6,9 +6,9 @@ import { useRef, useState } from 'react';
 import type { Block, EventItem } from '@/lib/data';
 import { shortDay } from '@/lib/format';
 import { Chips, EventCard } from '../EventCard';
+import { useCloseAtLg } from '../Header';
 
 type Props = { events: EventItem[]; schedule: Block[] };
-const split = (v: string | null) => (v ? v.split(',').filter(Boolean) : []);
 const plural = (n: number) => `${new Intl.NumberFormat('en-IN').format(n)} ${n === 1 ? 'event' : 'events'}`;
 
 /** This component reads the URL. It renders inside Suspense. The fallback is EventsView with no parameters. */
@@ -24,15 +24,16 @@ export function EventsViewLive(props: Props) {
 export function EventsView({ events, schedule, query }: Props & { query: string }) {
   const params = new URLSearchParams(query);
   const router = useRouter();
-  const pathname = usePathname();
   const hasSchedule = schedule.length > 0;
   const asked = params.get('view');
   const view = asked === 'board' || asked === 'list' ? asked : hasSchedule ? 'board' : 'list';
 
-  const tracks = [...new Set(events.map((e) => e.category).filter(Boolean))].sort();
+  const tracks = [...new Set(events.filter((e) => !e.cancelled).map((e) => e.category).filter(Boolean))].sort();
   const fields = [...new Set(events.flatMap((e) => e.keywords))];
-  const selTracks = split(params.get('track')).filter((t) => tracks.includes(t));
-  const selFields = split(params.get('field')).filter((f) => fields.includes(f));
+  // Older links joined the values with commas, so a value that is not an option is split on its commas.
+  const pick = (k: string, opts: string[]) => params.getAll(k).flatMap((v) => (opts.includes(v) ? [v] : v.split(','))).filter((v) => opts.includes(v));
+  const selTracks = pick('track', tracks);
+  const selFields = pick('field', fields);
   const shown = events.filter(
     (e) => (!selTracks.length || selTracks.includes(e.category)) && (!selFields.length || e.keywords.some((k) => selFields.includes(k))),
   );
@@ -40,16 +41,18 @@ export function EventsView({ events, schedule, query }: Props & { query: string 
   const href = (patch: Record<string, string[] | string | null>) => {
     const q = new URLSearchParams(params.toString());
     for (const [k, v] of Object.entries(patch)) {
-      const val = Array.isArray(v) ? v.join(',') : v;
-      if (val) q.set(k, val);
-      else q.delete(k);
+      q.delete(k);
+      // A list goes in as repeated parameters, so a category may contain a comma.
+      for (const x of Array.isArray(v) ? v : v ? [v] : []) q.append(k, x);
     }
+    // This view lives on /events. While an event dialog is open the URL is /events/<id>, so the path is fixed here.
     const s = q.toString();
-    return s ? `${pathname}?${s}` : pathname;
+    return s ? `/events?${s}` : '/events';
   };
   const setFilters = (t: string[], f: string[]) => router.replace(href({ track: t, field: f }), { scroll: false });
 
-  const count = view === 'board' ? new Set(schedule.map((b) => b.eventId).filter(Boolean)).size : shown.length;
+  const ids = new Set(events.map((e) => e.id));
+  const count = view === 'board' ? new Set(schedule.map((b) => b.eventId).filter((id) => ids.has(id))).size : shown.length;
 
   return (
     <div className={`mx-auto w-full max-w-board px-[15px] pt-8 md:px-5 lg:px-10 lg:pt-12 xl:px-[38px] ${view === 'list' ? 'pb-24 lg:pb-[100px]' : 'pb-[100px]'}`}>
@@ -154,7 +157,7 @@ function Board({ events, schedule, listHref }: Props & { listHref: string }) {
                 </div>
                 {plain ? (
                   <div className="grid h-[100px] place-items-center bg-surface-subtle px-4 text-center font-semibold md:h-[153px] xl:my-[5px] xl:h-16 xl:flex-1 xl:text-xl">
-                    {blocks.map((b) => b.title).join(' · ')}
+                    {blocks.map((b) => [b.title, b.venue].filter(Boolean).join(', ')).join(' · ')}
                   </div>
                 ) : (
                   <ul
@@ -170,9 +173,9 @@ function Board({ events, schedule, listHref }: Props & { listHref: string }) {
                         return (
                           <li key={`${v}-${i}`} className="xl:col-start-(--col)" style={at}>
                             {e ? (
-                              <EventCard e={e} variant="board" note={b.venue} />
+                              <EventCard e={e} variant="board" note={[b.venue, b.title].filter(Boolean).join(' · ')} />
                             ) : (
-                              <div className="flex min-h-[200px] flex-col justify-between bg-surface-subtle p-[15px] lg:h-[222px] xl:h-[220px]">
+                              <div className="flex min-h-[200px] flex-col justify-between bg-surface-subtle p-[15px] lg:min-h-[222px] xl:min-h-[220px]">
                                 <p className="text-lg font-bold lg:text-[15px]">{b.title}</p>
                                 <p className="text-[13px] font-bold">{b.venue}</p>
                               </div>
@@ -188,6 +191,11 @@ function Board({ events, schedule, listHref }: Props & { listHref: string }) {
           })}
         </section>
       ))}
+      {events.some((e) => !e.cancelled && e.blocks.length === 0) && (
+        <Link href={listHref} className="self-center text-sm text-fg-muted underline underline-offset-4">
+          Some events are not in the timetable. See every event in the list
+        </Link>
+      )}
     </div>
   );
 }
@@ -214,7 +222,7 @@ function ListView({ events, total, hasSchedule, onReset }: { events: EventItem[]
   const when = (e: EventItem) => (e.blocks[0] ? e.blocks[0].date + e.blocks[0].start : '9');
   for (const e of [...events].sort((x, y) => when(x).localeCompare(when(y)))) {
     const b = e.blocks[0];
-    const label = !hasSchedule ? '' : b ? `${shortDay(b.date)}, ${b.start}` : 'Time to be announced';
+    const label = !hasSchedule ? '' : b ? `${shortDay(b.date)}, ${b.start}` : e.cancelled ? 'Cancelled' : 'Time to be announced';
     groups.set(label, [...(groups.get(label) ?? []), e]);
   }
   return (
@@ -299,6 +307,7 @@ function Filters({ tracks, fields, selTracks, selFields, onChange }: {
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [draft, setDraft] = useState({ t: selTracks, f: selFields });
+  useCloseAtLg(dialog);
   const n = selTracks.length + selFields.length;
   const dn = draft.t.length + draft.f.length;
   if (tracks.length === 0 && fields.length === 0) return null;

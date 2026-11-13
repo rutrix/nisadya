@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useSelectedLayoutSegment } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { CountdownPill, RegisterAction, usePhase, type PhaseInfo, type PhaseSettings } from './Phase';
@@ -44,8 +44,19 @@ export function useScrolledPast(px = 82) {
   return past;
 }
 
+/** Closes a modal dialog when the viewport reaches 1080 px. The dialog is hidden there but would still block the page. */
+export function useCloseAtLg(ref: React.RefObject<HTMLDialogElement | null>) {
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1080px)');
+    const on = () => mq.matches && ref.current?.close();
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, [ref]);
+}
+
 export function Header(props: FrameProps) {
-  const home = usePathname() === '/';
+  // The page in the children slot, not the URL: an event dialog over the home page changes only the URL.
+  const home = useSelectedLayoutSegment() === null;
   const p = usePhase(props.phase, props.serverNow);
   const scrolled = useScrolledPast();
   const menu = useRef<HTMLDialogElement>(null);
@@ -101,6 +112,7 @@ export function Header(props: FrameProps) {
 }
 
 function MobileMenu({ ref, p, ...props }: FrameProps & { ref: React.RefObject<HTMLDialogElement | null>; p: PhaseInfo }) {
+  useCloseAtLg(ref);
   const close = () => ref.current?.close();
   return (
     <dialog

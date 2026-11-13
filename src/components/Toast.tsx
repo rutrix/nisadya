@@ -15,12 +15,20 @@ export function Toaster() {
   // A modal dialog makes the rest of the page inert and covers it, so the message goes inside the open dialog.
   const [host, setHost] = useState<Element | null>(null);
   useEffect(() => {
+    let t: ReturnType<typeof setTimeout>;
     const on = (e: Event) => {
+      // A screen reader reads a live region only if it is in the page before its text. So the region mounts
+      // empty in its host first, and the text follows.
+      setMsg(null);
       setHost(document.querySelector('dialog[open]'));
-      setMsg((e as CustomEvent<Msg>).detail);
+      clearTimeout(t);
+      t = setTimeout(() => setMsg((e as CustomEvent<Msg>).detail), 100);
     };
     window.addEventListener('toast', on);
-    return () => window.removeEventListener('toast', on);
+    return () => {
+      window.removeEventListener('toast', on);
+      clearTimeout(t);
+    };
   }, []);
   useEffect(() => {
     if (!msg) return;
@@ -28,7 +36,7 @@ export function Toaster() {
     return () => clearTimeout(t);
   }, [msg]);
   const region = (
-    <div className="pointer-events-none fixed inset-x-4 top-20 z-50 flex justify-center" role={msg?.error ? 'alert' : 'status'}>
+    <div className="pointer-events-none fixed inset-x-4 top-20 z-50 flex justify-center" role="status">
       {msg && (
         <p
           key={msg.id}

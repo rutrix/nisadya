@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+// Runs the privacy check of pre-commit on the commit message: a name or a number in a message is as public as one in a file.
+process.argv = [process.argv[0], __filename, '--message-file', process.argv[2]];
+require('./pre-commit');

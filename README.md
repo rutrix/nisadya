@@ -5,7 +5,7 @@ Department of Management Studies, NIT Tiruchirappalli.
 
 ## What it is
 
-Firebase App Hosting renders this Next.js 15 site on the server. There is no
+Firebase App Hosting renders this Next.js 16 site on the server. There is no
 database, no login and no secret. The editable content comes from one
 published Google Sheet with six tabs. `sheet.json` holds the gid of each tab.
 The published ID of the sheet stays out of git, because anyone with it can read

@@ -14,9 +14,15 @@ const path = require('node:path');
   const allow = [...PRIVACY_ALLOW, '46338953+rutrix@users.noreply.github.com'];
   let names = [];
   try {
-    names = readFileSync(path.join(root, '.git/private-names.txt'), 'utf8').split('\n').map((s) => s.trim()).filter(Boolean);
+    // The common git folder holds one list for the main clone and every linked worktree.
+    const file = path.join(execFileSync('git', ['rev-parse', '--path-format=absolute', '--git-common-dir'], { cwd: root, encoding: 'utf8' }).trim(), 'private-names.txt');
+    names = readFileSync(file, 'utf8').split('\n').map((s) => s.trim()).filter(Boolean);
   } catch {}
   const worktree = process.argv.includes('--worktree');
+  if (!names.length && !worktree) {
+    console.error('privacy check: no names list, so the commit is blocked. Run npm run bake once (it needs SHEET_ID), then commit again.');
+    process.exit(1);
+  }
   const git = (args) => execFileSync('git', args, { cwd: root, encoding: 'utf8', maxBuffer: 1 << 30 });
   const files = (worktree ? git(['ls-files', '-co', '--exclude-standard', '-z']) : git(['diff', '--cached', '--name-only', '--diff-filter=ACMR', '-z']))
     .split('\0')
@@ -25,7 +31,16 @@ const path = require('node:path');
   // The baked sheet and its media are never committed, whatever they hold (.gitignore; `git add -f` gets here).
   const NEVER = /^(src\/data\/baked\.json$|public\/media\/)/;
   const hits = [];
-  for (const f of files) {
+  // .githooks/commit-msg runs this file with --message-file: a message is as public as a file. Git drops what
+  // follows the scissors line of `git commit -v` (the diff), so the check stops there too.
+  const mi = process.argv.indexOf('--message-file');
+  const msgFile = mi > 0 ? process.argv[mi + 1] : '';
+  if (msgFile)
+    readFileSync(msgFile, 'utf8').split(/^# -+ >8 -+$/m)[0].split('\n').forEach((line, i) => {
+      const kinds = findPrivate(line, names, allow);
+      if (kinds.length) hits.push(`  commit message, line ${i + 1}: ${kinds.join(', ')}`);
+    });
+  for (const f of msgFile ? [] : files) {
     if (NEVER.test(f)) {
       hits.push(`  ${f}: never commit this file. It is baked from the sheet for each build.`);
       continue;

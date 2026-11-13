@@ -71,15 +71,14 @@ export function Hero({ s, name, serverNow, phase }: { s: Settings; name: string;
               )}
             </p>
             <HeroAction s={phase} serverNow={serverNow} url={s.registration_url} />
-            {/* The sponsor's artwork as supplied, on white in both themes: its colours are not ours to change. Spacing is
-                optical: equal visible space above and below the label's capitals, and around the logo on all sides (the
-                tagline baseline is the bottom edge, not the tail of its "y"). The border keeps the card's shape in light mode. */}
-            <div className="mt-2 flex w-[200px] flex-col items-center border-2 border-venue-panel bg-white pb-[21px] text-black md:w-[270px] md:pb-[30px] lg:mt-0 lg:w-[320px] lg:pb-[35px]">
-              <p className="self-stretch bg-venue-panel pb-2 pt-[6.5px] text-center text-xs font-semibold leading-none md:py-[9px] md:text-sm lg:py-[11px] lg:text-base">
-                Title sponsor
-              </p>
-              <Image src="/sbi-logo.svg" alt="State Bank of India" width={442} height={216} className="mt-[22px] h-auto w-[150px] md:mt-8 md:w-[200px] lg:mt-[37px] lg:w-[240px]" />
-            </div>
+            {/* The sponsor's artwork as supplied, on white in both themes: its colours are not ours to change. The credit
+                sits outside the plate in our own type, and the plate is narrower than the button so it does not read as one. */}
+            <figure className="mt-3 flex flex-col items-center gap-2 lg:mt-2">
+              <figcaption className="text-[11px] font-medium uppercase leading-4 tracking-[0.16em] text-fg-secondary lg:text-xs">Title sponsor</figcaption>
+              <div className="bg-white p-4">
+                <Image src="/sbi-logo.svg" alt="State Bank of India" width={442} height={216} className="block h-auto w-[152px] lg:w-[208px]" />
+              </div>
+            </figure>
           </div>
         </div>
       </section>

@@ -5,6 +5,7 @@
 // If the bake cannot read the sheet, an existing baked.json stays. With none, a build stops (see notRead).
 // Usage: node scripts/bake.mjs            read the sheet SHEET_ID (environment), with the gids in sheet.json
 //        node scripts/bake.mjs --csv DIR  read DIR/<tab>.csv instead (a missing file makes the read untrusted)
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -102,9 +103,16 @@ if (bad.length) await notRead(`a required column is missing in ${bad.join(', ')}
 if (tabs.settings.length === 0) await notRead('the settings tab is empty, so the bake does not trust the read');
 
 // The local pre-commit hook blocks a commit that contains one of these names. The list stays inside
-// .git, which git never commits. The list only grows. Without a .git folder, the bake skips this step.
-if (await readFile(path.join(root, '.git', 'HEAD')).then(() => true, () => false)) {
-  const file = path.join(root, '.git', 'private-names.txt');
+// .git, which git never commits. The list only grows. Without git (App Hosting), the bake skips this step.
+const file = (() => {
+  try {
+    // The common git folder holds one list for the main clone and every linked worktree.
+    return path.join(execFileSync('git', ['rev-parse', '--path-format=absolute', '--git-common-dir'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim(), 'private-names.txt');
+  } catch {
+    return '';
+  }
+})();
+if (file) {
   const old = (await readFile(file, 'utf8').catch(() => '')).split('\n').filter(Boolean);
   await writeFile(file, [...new Set([...old, ...sheetNames(tabs)])].sort().join('\n') + '\n');
 }

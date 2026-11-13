@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import { Clock } from 'lucide-react';
-import { canOptimise, isEmail } from '@/lib/core.mjs';
+import { isEmail } from '@/lib/core.mjs';
 import { PHASE_KEYS, SITE_URL, siteName, type EventItem, type Site } from '@/lib/data';
-import { dateRange, shortDay } from '@/lib/format';
+import { dateRange, slotText } from '@/lib/format';
 import { Chips, EventCard, accentOf } from '../EventCard';
 import { RichText } from '../RichText';
 import { Share } from '../Share';
@@ -45,11 +45,12 @@ export function EventDetail({ e, site, mode, serverNow }: { e: EventItem; site: 
           </Title>
           <ul className={`flex flex-col gap-1 text-sm font-semibold leading-[21px] lg:text-base lg:leading-6 ${a.text}`}>
             {(e.blocks.length ? e.blocks : [null]).map((b, i) => (
-              <li key={i} className="flex items-center gap-1.5">
-                <Clock className="h-[13px] w-[13px] shrink-0 lg:h-[17px] lg:w-[17px]" aria-hidden />
-                {b
-                  ? [shortDay(b.date), b.end ? `${b.start}–${b.end}` : b.start, b.venue].filter(Boolean).join(' · ')
-                  : `${dateRange(s.event_start, s.event_end)} · Time to be announced`}
+              <li key={i} className="flex gap-1.5">
+                <Clock className="mt-1 h-[13px] w-[13px] shrink-0 lg:h-[17px] lg:w-[17px]" aria-hidden />
+                <span>
+                  {b ? slotText(b) : e.cancelled ? 'Cancelled' : `${dateRange(s.event_start, s.event_end)} · Time to be announced`}
+                  {b?.title && <span className="block font-medium">{b.title}</span>}
+                </span>
               </li>
             ))}
           </ul>
@@ -64,7 +65,6 @@ export function EventDetail({ e, site, mode, serverNow }: { e: EventItem; site: 
               width={1080}
               height={1080}
               sizes="(min-width: 1080px) 720px, 100vw"
-              unoptimized={!canOptimise(e.poster)}
               className="h-auto max-h-[560px] w-auto max-w-full"
             />
           </div>

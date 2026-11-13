@@ -37,9 +37,10 @@ export function parts(ms: number) {
 export const two = (n: number) => String(n).padStart(2, '0');
 
 /** A sentence for screen readers, e.g. "12 days, 3 hours and 4 minutes left". */
+const unit = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 export function leftSentence(ms: number) {
   const { d, h, m } = parts(ms);
-  return `${d} days, ${h} hours and ${m} minutes left`;
+  return `${unit(d, 'day')}, ${unit(h, 'hour')} and ${unit(m, 'minute')} left`;
 }
 
 export function pillPrefix(p: PhaseInfo) {
@@ -59,7 +60,7 @@ export function RegisterAction({ p, url, className }: { p: PhaseInfo; url: strin
     );
   }
   if (p.phase === 'soon' || p.phase === 'open') {
-    const msg = p.opensAt ? `Registration opens on ${formatDay(p.opensAt)}` : 'Registration opens soon';
+    const msg = p.opensAt ? `Registration opens on ${formatDay(p.opensAt)}` : p.phase === 'open' ? 'The registration link is coming soon' : 'Registration opens soon';
     return (
       <button type="button" className={`btn-primary ${className}`} onClick={() => toast(msg)}>
         Register

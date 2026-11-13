@@ -35,7 +35,7 @@ assert.deepEqual(resolveTab('events', bEv, lEv).map((r) => r.name), ['C', 'A bak
 assert.deepEqual(resolveTab('events', bEv, [{ id: 'b', name: 'B new' }]).map((r) => r.name), ['B new', 'A baked']); // deleted live
 assert.deepEqual(resolveTab('events', bEv, []).map((r) => r.name), ['A baked']); // empty live tab: only the final rows
 assert.deepEqual(resolveTab('events', [{ id: 'a', name: 'A', final: 'FALSE' }], [{ id: 'a', name: 'A2', final: 'TRUE' }]).map((r) => r.name), ['A2']); // final only after the next build
-// the paragraphs under one page heading are one group: final only when every paragraph is final
+// the paragraphs under one page heading are one group: one final paragraph fixes the whole section
 const bPg = [{ page: 'p', heading: 'H', text: '1', final: 'TRUE' }, { page: 'p', heading: 'H', text: '2', final: 'TRUE' }, { page: 'p', heading: 'K', text: '3', final: 'TRUE' }, { page: 'p', heading: 'K', text: '4', final: 'FALSE' }];
 const lPg = [{ page: 'p', heading: '', text: 'lead' }, { page: 'p', heading: 'H', text: '1 edited' }, { page: 'p', heading: 'H', text: '2' }, { page: 'p', heading: 'H', text: 'added' }, { page: 'p', heading: 'K', text: '3 edited' }];
 assert.deepEqual(resolveTab('pages', bPg, lPg).map((r) => r.text), ['lead', '1', '2', '3', '4']); // one final paragraph fixes its section
@@ -172,5 +172,13 @@ assert.deepEqual(findPrivate('Coordinator: Test Person.', ['TEST PERSON']), ['na
 assert.deepEqual(findPrivate('Testpersonal and nisadya@nitt.edu, studio-6468512058-1f678', ['TEST PERSON', 'Test']), []);
 assert.deepEqual(findPrivate(j('<image href="data:image/png;base64,AAAA98765', '43210+/AA"/>'), []), []);
 assert.deepEqual(sheetNames({ events: [{ coordinators: 'Al, Cee\nDee' }, { coordinators: '' }], contacts: [{ name: 'Eve Smith' }] }), ['Cee', 'Dee', 'Eve Smith']);
+
+// dateRange (src/lib/format.ts; Node strips the types)
+const { dateRange } = await import('../src/lib/format.ts');
+assert.equal(dateRange('2026-11-13', '2026-11-14'), '13–14 November 2026');
+assert.equal(dateRange('2026-10-30', '2026-11-02'), '30 October – 2 November 2026');
+assert.equal(dateRange('2026-12-30', '2027-01-02'), '30 December 2026 – 2 January 2027');
+assert.equal(dateRange('2026-11-13', '2027-11-14'), '13 November 2026 – 14 November 2027');
+assert.equal(dateRange('2026-11-13'), '13 November 2026');
 
 console.log('check: all assertions passed');
