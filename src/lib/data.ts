@@ -4,12 +4,13 @@ import 'server-only';
 import { cache } from 'react';
 import baked from '@/data/baked.json';
 import sheet from '../../sheet.json';
-import { TABS, canOptimise, driveImage, hhmm, isFixed, isoDate, readTab, resolveTab, slug } from './core.mjs';
+import { TABS, canOptimise, driveImage, hhmm, isFixed, isoDate, istTime, readTab, resolveTab, slug } from './core.mjs';
 
 export const REVALIDATE = 60;
 export const SITE_URL = 'https://nisadya.in';
-/** The settings keys that decide the registration and event phase. */
-export const PHASE_KEYS = ['registration_open', 'registration_close', 'event_start', 'event_end'];
+/** The settings keys that decide the registration and event phase. onspot_until is not a sheet key: getSite sets it
+ * from the events' register_until. */
+export const PHASE_KEYS = ['registration_open', 'registration_close', 'event_start', 'event_end', 'onspot_until'];
 
 type Rec = Record<string, string>;
 type Tab = (typeof TABS)[number];
@@ -32,6 +33,8 @@ export type EventItem = {
   contact: string;
   /** True when the category is "Cancelled": the event keeps its page and shows no time. */
   cancelled: boolean;
+  /** The end of on-spot registration (register_until, India time), or null. */
+  registerUntil: number | null;
   blocks: Block[];
 };
 export type Faq = { category: string; question: string; answer: string };
@@ -146,9 +149,15 @@ export const getSite = cache(async (): Promise<Site> => {
       coordinators: list(r.coordinators),
       contact: r.contact ?? '',
       cancelled: /^cancell?ed$/i.test(r.category ?? ''),
+      // A date without a time means the whole day, as registration_close does.
+      registerUntil: istTime(r.register_until ?? '', '23:59'),
       blocks: schedule.filter((b) => b.eventId === id),
     });
   }
+
+  // The last on-spot registration close of any event. Until then the header and hero buttons point to the FAQ.
+  const onspot = Math.max(0, ...events.map((e) => (e.cancelled ? 0 : (e.registerUntil ?? 0))));
+  settings.onspot_until = onspot ? String(onspot) : '';
 
   const faq = raw.faq
     .filter((r) => r.question && r.answer)

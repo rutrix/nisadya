@@ -91,7 +91,7 @@ export function EventDetail({ e, site, mode, serverNow }: { e: EventItem; site: 
         )}
 
         <div className="flex flex-col gap-5">
-          <DetailRegister s={phase} serverNow={serverNow} url={e.unstopUrl || s.registration_url} />
+          <DetailRegister s={phase} serverNow={serverNow} url={e.unstopUrl || s.registration_url} until={e.unstopUrl && !e.cancelled ? e.registerUntil : null} />
           <Share url={`${SITE_URL}/events/${e.id}`} title={`${e.name} | ${siteName(s)}`} variant="detail" />
         </div>
       </div>

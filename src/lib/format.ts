@@ -27,5 +27,9 @@ export const shortDay = (date: string) => {
   return t === null ? date : short.format(t);
 };
 
+const hm = fmt({ hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+/** "15:00 on Fri, 13 Nov" for a moment (epoch ms). */
+export const timeOn = (ms: number) => `${hm.format(ms)} on ${short.format(ms)}`;
+
 /** A schedule slot on one line: "Fri, 13 Nov · 12:00–15:00 · DoMS LH1". The caller shows the title. */
 export const slotText = (b: Block) => [shortDay(b.date), b.end ? `${b.start}–${b.end}` : b.start, b.venue].filter(Boolean).join(' · ');

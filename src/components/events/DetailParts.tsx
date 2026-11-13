@@ -2,7 +2,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useId, useRef } from 'react';
+import { timeOn } from '@/lib/format';
 import { RegisterAction, usePhase, type PhaseSettings } from '../Phase';
 
 const CLOSE = 'absolute right-0 top-0 z-10 grid h-10 w-10 place-items-center bg-brand text-brand-fg lg:h-12 lg:w-12';
@@ -23,9 +24,24 @@ export function DetailClose({ mode }: { mode: 'page' | 'modal' }) {
   );
 }
 
-export function DetailRegister({ s, serverNow, url }: { s: PhaseSettings; serverNow: number; url: string }) {
+export function DetailRegister({ s, serverNow, url, until }: { s: PhaseSettings; serverNow: number; url: string; until: number | null }) {
   const p = usePhase(s, serverNow);
-  return <RegisterAction p={p} url={url} className="h-14 w-full text-base sm:w-[320px] lg:h-[70px] lg:text-xl" />;
+  const note = useId();
+  const cls = 'h-14 w-full text-base sm:w-[320px] lg:h-[70px] lg:text-xl';
+  // This event's own on-spot window: a Register link until it closes. Otherwise the general button, without the
+  // on-spot link that points to the other events.
+  if (p.phase !== 'ended' && until && p.now < until && /^https:\/\//i.test(url))
+    return (
+      <div className="flex flex-col gap-2">
+        <a href={url} target="_blank" rel="noopener noreferrer" aria-describedby={note} className={`btn-primary ${cls}`}>
+          Register<span className="sr-only"> on Unstop (opens in a new window)</span>
+        </a>
+        <p id={note} suppressHydrationWarning className="text-sm font-semibold">
+          On-spot registration closes at {timeOn(until)}.
+        </p>
+      </div>
+    );
+  return <RegisterAction p={{ ...p, onspotUntil: null }} url={url} className={cls} />;
 }
 
 /**

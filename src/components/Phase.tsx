@@ -1,10 +1,11 @@
 'use client';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { phaseAt } from '@/lib/core.mjs';
 import { toast } from './Toast';
 
 export type PhaseSettings = Record<string, string>;
-export type PhaseInfo = ReturnType<typeof phaseAt> & { now: number; mounted: boolean };
+export type PhaseInfo = ReturnType<typeof phaseAt> & { now: number; mounted: boolean; onspotUntil: number | null };
 
 const day = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'long', timeZone: 'Asia/Kolkata' });
 export const formatDay = (ms: number) => day.format(ms);
@@ -26,7 +27,7 @@ export function usePhase(s: PhaseSettings, serverNow: number): PhaseInfo {
     return () => clearTimeout(t);
   }, []);
   const at = now ?? serverNow;
-  return { ...phaseAt(at, s), now: at, mounted: now !== null };
+  return { ...phaseAt(at, s), now: at, mounted: now !== null, onspotUntil: Number(s.onspot_until) || null };
 }
 
 /** Days, hours, minutes and seconds until a moment. */
@@ -65,6 +66,14 @@ export function RegisterAction({ p, url, className }: { p: PhaseInfo; url: strin
       <button type="button" className={`btn-primary ${className}`} onClick={() => toast(msg)}>
         Register
       </button>
+    );
+  }
+  // While any event still takes on-spot entries, the general button points to the FAQ that lists them.
+  if (p.onspotUntil && p.now < p.onspotUntil) {
+    return (
+      <Link href="/#faq" className={`btn-primary ${className}`}>
+        On-spot registration
+      </Link>
     );
   }
   return (

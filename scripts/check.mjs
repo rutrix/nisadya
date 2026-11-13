@@ -174,11 +174,13 @@ assert.deepEqual(findPrivate(j('<image href="data:image/png;base64,AAAA98765', '
 assert.deepEqual(sheetNames({ events: [{ coordinators: 'Al, Cee\nDee' }, { coordinators: '' }], contacts: [{ name: 'Eve Smith' }] }), ['Cee', 'Dee', 'Eve Smith']);
 
 // dateRange (src/lib/format.ts; Node strips the types)
-const { dateRange } = await import('../src/lib/format.ts');
+const { dateRange, timeOn } = await import('../src/lib/format.ts');
 assert.equal(dateRange('2026-11-13', '2026-11-14'), '13–14 November 2026');
 assert.equal(dateRange('2026-10-30', '2026-11-02'), '30 October – 2 November 2026');
 assert.equal(dateRange('2026-12-30', '2027-01-02'), '30 December 2026 – 2 January 2027');
 assert.equal(dateRange('2026-11-13', '2027-11-14'), '13 November 2026 – 14 November 2027');
 assert.equal(dateRange('2026-11-13'), '13 November 2026');
+assert.equal(timeOn(istTime('2026-11-13 15:00')), '15:00 on Fri, 13 Nov');
+assert.equal(timeOn(istTime('2026-11-14 09:00')), '09:00 on Sat, 14 Nov');
 
 console.log('check: all assertions passed');
